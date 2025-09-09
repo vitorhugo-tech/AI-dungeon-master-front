@@ -1,9 +1,13 @@
+@font-face {
+  font-family: MorrisRoman;
+  src: url(../login/assets/MorrisRomanBlack.otf);
+}
+
 /* Container layout */
 .container {
-  display: flex;
   height: 100vh;
-  width: 100%;
 }
+
 main {
   display: flex;
   flex: 1;
@@ -15,117 +19,124 @@ main {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 3rem;
-  color: white;
+  color: var(--mat-sys-outline-variant);
   overflow: hidden;
-  background: linear-gradient(270deg, #4f46e5, #3b82f6, #06b6d4);
-  background-size: 600% 600%;
-  animation: gradientShift 15s ease infinite;
+  background: linear-gradient(270deg, #5b2b0b, #b3710f, #987209);
+  background-image: url(../login/assets/heroes.jpeg);
+  background-size: cover;
+  animation: gradientShift 30s alternate-reverse infinite;
 }
 
 @keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
+  from {
+    background-position: 70% 50%;
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+  to {
+    background-position: 10% 50%;
   }
 }
 
 /* Floating shapes */
-.shape {
+.info-panel>div {
   position: absolute;
   border-radius: 50%;
   opacity: 0.15;
   animation: float 10s ease-in-out infinite;
 }
+
 .shape1 {
   width: 200px;
   height: 200px;
-  background: #ffffff;
+  background: #ff8800;
   top: 10%;
   left: -50px;
-  animation-delay: 0s;
 }
+
 .shape2 {
   width: 150px;
   height: 150px;
-  background: #000000;
+  background: #ffae00;
   top: 50%;
   right: -75px;
   animation-delay: 3s;
 }
+
 .shape3 {
   width: 300px;
   height: 300px;
-  background: #ffffff;
+  background: #ff6600;
   bottom: -150px;
   left: 30%;
   animation-delay: 6s;
 }
+
 @keyframes float {
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px) rotate(45deg);
+    transform: translateY(-40px);
   }
-}
-
-.info-panel h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  z-index: 1;
-  position: relative;
-}
-.info-panel h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  font-weight: 400;
-  z-index: 1;
-  position: relative;
-}
-.info-panel p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  z-index: 1;
-  position: relative;
 }
 
 /* Login Panel */
 .login-panel {
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  background: #f9fafb;
+  background: var(--mat-sys-surface);
+}
+
+.textbox {
+  text-align: center;
+  color: var(--mat-sys-on-surface);
+}
+
+.textbox h1 {
+  font-family: MorrisRoman;
+  font-size: 3rem;
+  margin: 0;
+  color: rgb(255, 174, 0);
+  & b {
+    text-shadow:
+    -2px -1px 0 rgb(255, 174, 0),
+     1px -1px 0 rgb(255, 174, 0),
+    -1px  1px 0 rgb(255, 174, 0),
+     1px  1px 0 rgb(255, 174, 0);
+    color: red;
+  }
+}
+
+.textbox h2 {
+  font-size: 1rem;
+  margin: 0 0 30px 0;
 }
 
 .login-card {
   width: 100%;
   max-width: 400px;
-  background: white;
+  background: var(--mat-sys-surface);
   padding: 2.5rem;
   border-radius: 1rem;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .login-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
-.login-card h2 {
+.login-card>h2 {
   margin-bottom: 1.5rem;
-  color: #111827;
+  color: var(--mat-sys-primary);
   text-align: center;
 }
+
 .login-card form {
   display: flex;
   flex-direction: column;
@@ -135,37 +146,33 @@ main {
   text-align: center;
   margin-top: 1rem;
 }
-.login-card .links a {
-  color: #4f46e5;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-.login-card .links a:hover {
-  color: #3b36c1;
-}
 
-/* Responsive */
+/* Responsividade */
 @media (max-width: 900px) {
   .container {
     flex-direction: column;
   }
+
   .info-panel {
     text-align: center;
     padding: 2rem;
   }
+
   .info-panel h1 {
     font-size: 2.5rem;
   }
-}
 
-/* Screen reader only labels */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+  .login-panel {
+    padding: 0;
+  }
+
+  .login-card {
+    position: absolute;
+    top: 25%;
+    padding: 0;
+  }
+
+  form>mat-form-field, form>button {
+    margin: 0 2rem;
+  }
 }
