@@ -3,6 +3,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
 import {
   FormControl,
   FormGroupDirective,
@@ -20,7 +21,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButton],
+  imports: [ FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatButton, MatTabsModule ],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
@@ -28,4 +29,10 @@ export class Login {
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('', [Validators.required]);
   matcher = new MyErrorStateMatcher();
+
+  selectedTabIndex = 0;
+
+  goToTab(num: number) {
+    this.selectedTabIndex = num;
+  }
 }

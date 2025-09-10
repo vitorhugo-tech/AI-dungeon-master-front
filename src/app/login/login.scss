@@ -81,6 +81,10 @@ main {
 }
 
 /* Login Panel */
+mat-tab-group ::ng-deep .mat-mdc-tab-header {
+  display: none;
+}
+
 .login-panel {
   flex: 1;
   display: flex;
@@ -147,6 +151,16 @@ main {
   margin-top: 1rem;
 }
 
+.links a {
+  color: rgb(0, 115, 255);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
 /* Responsividade */
 @media (max-width: 900px) {
   .container {
@@ -169,7 +183,7 @@ main {
   .login-card {
     position: absolute;
     top: 25%;
-    padding: 0;
+    padding: 2.5rem 0;
   }
 
   form>mat-form-field, form>button {
