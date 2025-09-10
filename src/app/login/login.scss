@@ -21,8 +21,6 @@ main {
   flex-direction: column;
   color: var(--mat-sys-outline-variant);
   overflow: hidden;
-  background-size: cover;
-  animation: gradientShift 30s alternate-reverse infinite;
 }
 
 .slideshow {
@@ -39,7 +37,7 @@ main {
   height: 100%;
   width: 100%;
   opacity: 0;
-  animation: fade 30s infinite, gradientShift 30s alternate-reverse infinite;
+  animation: fadeAndSlide 70s linear infinite;
 }
 
 .slide:nth-of-type(1) {
@@ -49,35 +47,31 @@ main {
 
 .slide:nth-of-type(2) {
   background-image: url(../login/assets/heroes2.jpeg);
-  animation-delay: 15s, 0s;
+  animation-delay: 21s;
 }
 
 .slide:nth-of-type(3) {
   background-image: url(../login/assets/heroes3.jpeg);
-  animation-delay: 30s, 0s;
+  animation-delay: 42s;
 }
 
-@keyframes fade {
+@keyframes fadeAndSlide {
   0% {
     opacity: 0;
+    background-position: 10% 50%
   }
-  25% {
+  10% {
     opacity: 1;
   }
-  75% {
+  40% {
     opacity: 1;
+  }
+  50% {
+    opacity: 0;
   }
   100% {
     opacity: 0;
-  }
-}
-
-@keyframes gradientShift {
-  from {
-    background-position: 70% 50%;
-  }
-  to {
-    background-position: 10% 50%;
+    background-position: 60% 50%;
   }
 }
 
