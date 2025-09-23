@@ -18,20 +18,20 @@
         <!-- Entrar -->
         <mat-tab>
           <h2>Entre em sua conta</h2>
-          <form>
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
             <mat-form-field>
               <mat-label>E-mail</mat-label>
               <input
                 name="email"
                 type="email"
                 matInput
-                [formControl]="emailFormControl"
+                formControlName="email"
                 [errorStateMatcher]="matcher"
                 placeholder="Ex. nome@exemplo.com"
               />
-              @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+              @if (loginForm.get('email')?.hasError('email') && !loginForm.get('email')?.hasError('required')) {
                 <mat-error>Insira um endereço de e-mail válido</mat-error>
-              } @if (emailFormControl.hasError('required')) {
+              } @if (loginForm.get('email')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
@@ -40,14 +40,17 @@
               <input
                 type="password"
                 matInput
-                [formControl]="passwordFormControl"
+                formControlName="password"
                 [errorStateMatcher]="matcher"
               />
-              @if (passwordFormControl.hasError('required')) {
+              @if (loginForm.get('password')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
             <button type="submit" matButton="filled">Entrar</button>
+            @if (this.loginError != ''){
+              <mat-error>{{ this.loginError }}</mat-error>
+            }
           </form>
           <div class="links">
             <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a> |
@@ -57,19 +60,19 @@
         <!-- Criar -->
         <mat-tab>
           <h2>Crie sua conta</h2>
-          <form>
+          <form [formGroup]="signupForm" (ngSubmit)="onSubmit(this.signupForm.value)">
             <mat-form-field>
               <mat-label>E-mail</mat-label>
               <input
                 type="email"
                 matInput
-                [formControl]="emailFormControl"
+                formControlName="email"
                 [errorStateMatcher]="matcher"
                 placeholder="Ex. nome@exemplo.com"
               />
-              @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+              @if (signupForm.get('email')?.hasError('email') && !signupForm.get('email')?.hasError('required')) {
                 <mat-error>Insira um endereço de e-mail válido</mat-error>
-              } @if (emailFormControl.hasError('required')) {
+              } @if (signupForm.get('email')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
@@ -78,10 +81,10 @@
               <input
                 type="password"
                 matInput
-                [formControl]="passwordFormControl"
+                formControlName="password"
                 [errorStateMatcher]="matcher"
               />
-              @if (passwordFormControl.hasError('required')) {
+              @if (signupForm.get('password')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
@@ -90,10 +93,10 @@
               <input
                 type="password"
                 matInput
-                [formControl]="passwordFormControl"
+                formControlName="confirmPassword"
                 [errorStateMatcher]="matcher"
               />
-              @if (passwordFormControl.hasError('required')) {
+              @if (signupForm.get('confirmPassword')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
@@ -106,19 +109,19 @@
         <!-- Recuperar -->
         <mat-tab>
           <h2>Recupere sua senha</h2>
-          <form>
+          <form [formGroup]="recoverForm" (ngSubmit)="onSubmit(this.recoverForm.value)">
             <mat-form-field>
               <mat-label>E-mail da conta</mat-label>
               <input
                 type="email"
                 matInput
-                [formControl]="emailFormControl"
+                formControlName="email"
                 [errorStateMatcher]="matcher"
                 placeholder="Ex. nome@exemplo.com"
               />
-              @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+              @if (recoverForm.get('email')?.hasError('email') && !recoverForm.get('email')?.hasError('required')) {
                 <mat-error>Insira um endereço de e-mail válido</mat-error>
-              } @if (emailFormControl.hasError('required')) {
+              } @if (recoverForm.get('email')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
@@ -132,10 +135,19 @@
         <!-- Confirmação -->
         <mat-tab>
           <h2>Insira o código enviado ao seu e-mail</h2>
-          <form>
+          <form [formGroup]="confirmationForm" (ngSubmit)="onSubmit(this.confirmationForm.value)">
             <mat-form-field>
               <mat-label>Código</mat-label>
-              <input type="text" matInput/>
+              <input
+                type="text"
+                matInput
+                formControlName="code"
+                [errorStateMatcher]="matcher"
+                placeholder="Ex. 123456"
+              />
+              @if (recoverForm.get('code')?.hasError('required')) {
+                <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+              }
             </mat-form-field>
             <button type="submit" matButton="filled">Confirmar</button>
           </form>
@@ -146,16 +158,16 @@
         <!-- Redefinição -->
         <mat-tab>
           <h2>Redefina sua senha</h2>
-          <form>
+          <form [formGroup]="passwordResetForm" (ngSubmit)="onSubmit(this.passwordResetForm.value)">
             <mat-form-field>
               <mat-label>Nova senha</mat-label>
               <input
                 type="password"
                 matInput
-                [formControl]="passwordFormControl"
+                formControlName="password"
                 [errorStateMatcher]="matcher"
               />
-              @if (passwordFormControl.hasError('required')) {
+              @if (passwordResetForm.get('password')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
@@ -164,10 +176,10 @@
               <input
                 type="password"
                 matInput
-                [formControl]="passwordFormControl"
+                formControlName="confirmPassword"
                 [errorStateMatcher]="matcher"
               />
-              @if (passwordFormControl.hasError('required')) {
+              @if (passwordResetForm.get('confirmPassword')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
