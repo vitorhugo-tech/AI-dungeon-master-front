@@ -17,7 +17,7 @@
       <mat-tab-group [(selectedIndex)]="selectedTabIndex" dynamicHeight>
         <!-- Entrar -->
         <mat-tab>
-          <h2>Entre em sua conta</h2>
+          <h2 class="mt-2">Entre em sua conta</h2>
           <form [formGroup]="loginForm" (ngSubmit)="login()">
             <mat-form-field>
               <mat-label>E-mail</mat-label>
@@ -29,10 +29,10 @@
                 [errorStateMatcher]="matcher"
                 placeholder="Ex. nome@exemplo.com"
               />
-              @if (loginForm.get('email')?.hasError('email') && !loginForm.get('email')?.hasError('required')) {
-                <mat-error>Insira um endereço de e-mail válido</mat-error>
-              } @if (loginForm.get('email')?.hasError('required')) {
+              @if (loginForm.get('email')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+              } @else if (loginForm.get('email')?.hasError('email')) {
+                <mat-error>Insira um endereço de e-mail válido</mat-error>
               }
             </mat-form-field>
             <mat-form-field>
@@ -49,7 +49,7 @@
             </mat-form-field>
             <button type="submit" matButton="filled">Entrar</button>
             @if (this.loginError != ''){
-              <mat-error>{{ this.loginError }}</mat-error>
+              <mat-error class="text-center">{{ this.loginError }}</mat-error>
             }
           </form>
           <div class="links">
@@ -60,7 +60,7 @@
         <!-- Criar -->
         <mat-tab>
           <h2>Crie sua conta</h2>
-          <form [formGroup]="signupForm" (ngSubmit)="onSubmit(this.signupForm.value)">
+          <form [formGroup]="signupForm" (ngSubmit)="create()">
             <mat-form-field>
               <mat-label>E-mail</mat-label>
               <input
@@ -69,11 +69,11 @@
                 formControlName="email"
                 [errorStateMatcher]="matcher"
                 placeholder="Ex. nome@exemplo.com"
-              />
-              @if (signupForm.get('email')?.hasError('email') && !signupForm.get('email')?.hasError('required')) {
-                <mat-error>Insira um endereço de e-mail válido</mat-error>
-              } @if (signupForm.get('email')?.hasError('required')) {
+                />
+              @if (signupForm.get('email')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+              } @else if (signupForm.get('email')?.hasError('email')) {
+                <mat-error>Insira um endereço de e-mail válido</mat-error>
               }
             </mat-form-field>
             <mat-form-field>
@@ -86,6 +86,8 @@
               />
               @if (signupForm.get('password')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+              } @else if (signupForm.get('password')?.hasError('minlength')) {
+                <mat-error>Este campo deve conter no mínimo <strong>5 digitos</strong></mat-error>
               }
             </mat-form-field>
             <mat-form-field>
@@ -98,9 +100,14 @@
               />
               @if (signupForm.get('confirmPassword')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+              } @else if (signupForm.get('confirmPassword')?.hasError('minlength')) {
+                <mat-error>Este campo deve conter no mínimo <strong>5 digitos</strong></mat-error>
               }
             </mat-form-field>
             <button type="submit" matButton="filled">Criar</button>
+            @if (this.signupError != ''){
+              <mat-error class="text-center">Não foi possível criar sua conta. Certifique-se de que o e-mail informado é valido</mat-error>
+            }
           </form>
           <div class="links">
             <a title="Entre com uma conta existente" (click)="goToTab(0)">Entre com uma conta existente</a>
@@ -119,10 +126,10 @@
                 [errorStateMatcher]="matcher"
                 placeholder="Ex. nome@exemplo.com"
               />
-              @if (recoverForm.get('email')?.hasError('email') && !recoverForm.get('email')?.hasError('required')) {
-                <mat-error>Insira um endereço de e-mail válido</mat-error>
-              } @if (recoverForm.get('email')?.hasError('required')) {
+              @if (recoverForm.get('email')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+              } @else if (recoverForm.get('email')?.hasError('email')) {
+                <mat-error>Insira um endereço de e-mail válido</mat-error>
               }
             </mat-form-field>
             <button type="submit" matButton="filled">Recuperar senha</button>

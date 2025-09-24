@@ -19,6 +19,13 @@ export class AuthService {
     });
   }
 
+  create(data: {email: string, password: string, username?: string }): Observable<any> {
+    data.username = data.email
+    return this.http.post(`${this.apiUrl}/users/adiciona`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   saveToken(token: string) {
     localStorage.setItem('access_token', token);
   }

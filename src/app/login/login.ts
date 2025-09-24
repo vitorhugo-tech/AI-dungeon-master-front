@@ -4,6 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import {
   FormBuilder,
   FormGroup,
@@ -16,6 +17,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
+import { Dialog } from '../dialog/dialog';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -43,6 +45,8 @@ export class Login {
   loginError: string = '';
 
   signupForm: FormGroup;
+  signupError: string = '';
+
   recoverForm: FormGroup;
   confirmationForm: FormGroup;
   passwordResetForm: FormGroup;
@@ -52,7 +56,8 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -61,8 +66,8 @@ export class Login {
 
     this.signupForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(5)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(5)]],
     });
 
     this.recoverForm = this.fb.group({
@@ -97,6 +102,32 @@ export class Login {
         },
         error: (err: any) => {
           this.loginError = err.error.detail
+          console.error('Erro no login:', err)
+        },
+      });
+    }
+  }
+
+  create() {
+    this.signupError = ''
+    if (this.signupForm.valid) {
+      if (this.signupForm.value.password !== this.signupForm.value.confirmPassword) {
+        this.signupError = 'As duas senhas precisam ser iguais'
+        return;
+      }
+      this.auth.create(this.signupForm.value).subscribe({
+        next: (res: any) => {
+          this.dialog.open(Dialog, {
+            data: {
+              title: 'Conta criada com sucesso',
+              message: 'Verifique a mensagem enviada para seu e-mail para terminar a criação de sua conta.'
+            }
+          });
+          this.goToTab(0)
+          console.log(res)
+        },
+        error: (err: any) => {
+          this.signupError = err.error.detail
           console.error('Erro no login:', err)
         },
       });
