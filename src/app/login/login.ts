@@ -93,26 +93,26 @@ export class Login {
   }
 
   login() {
-    this.loginError = ''
+    this.loginError = '';
     if (this.loginForm.valid) {
       this.auth.login(this.loginForm.value).subscribe({
         next: (res: any) => {
-          this.auth.saveToken(res.token);
-          this.router.navigate(['/dashboard']);
+          this.auth.saveTokens(res);
+          this.router.navigate(['/session']);
         },
         error: (err: any) => {
-          this.loginError = err.error.detail
-          console.error('Erro no login:', err)
+          this.loginError = err.error.detail;
+          console.error('Erro no login:', err);
         },
       });
     }
   }
 
   create() {
-    this.signupError = ''
+    this.signupError = '';
     if (this.signupForm.valid) {
       if (this.signupForm.value.password !== this.signupForm.value.confirmPassword) {
-        this.signupError = 'As duas senhas precisam ser iguais'
+        this.signupError = 'As duas senhas precisam ser iguais';
         return;
       }
       this.auth.create(this.signupForm.value).subscribe({
@@ -120,15 +120,16 @@ export class Login {
           this.dialog.open(Dialog, {
             data: {
               title: 'Conta criada com sucesso',
-              message: 'Verifique a mensagem enviada para seu e-mail para terminar a criação de sua conta.'
-            }
+              message:
+                'Verifique a mensagem enviada para seu e-mail para terminar a criação de sua conta.',
+            },
           });
-          this.goToTab(0)
-          console.log(res)
+          this.goToTab(0);
+          console.log(res);
         },
         error: (err: any) => {
-          this.signupError = err.error.detail
-          console.error('Erro no login:', err)
+          this.signupError = err.error.detail;
+          console.error('Erro no login:', err);
         },
       });
     }
