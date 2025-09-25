@@ -1,3 +1,12 @@
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #4b3523;
+  border-radius: 10px;
+}
+
 /* Sidebar */
 .container {
   margin: 0;
@@ -15,20 +24,24 @@
   color: #f5e6c8;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   border-right: 5px ridge #c9a66b;
   box-shadow: inset -4px 0 10px rgba(0, 0, 0, 0.7);
   z-index: 20;
-  flex-shrink: 0;
-}
-
-.sidebar.collapsed {
-  width: 60px;
 }
 
 .sidebar nav {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+.sidebar a.bottom {
+  margin-top: auto;
+}
+
+.sidebar.collapsed {
+  width: 60px;
 }
 
 .sidebar nav a {
@@ -38,6 +51,7 @@
   color: white;
   transition: background 0.2s ease;
   align-items: center;
+  white-space: nowrap;
 }
 .sidebar nav a:first-of-type {
   justify-content: space-between;
@@ -84,31 +98,27 @@
   display: none;
 }
 
-/* Conteúdo principal */
-.content {
-  margin-left: 220px;
-  padding: 1rem;
-  transition: margin-left 0.3s ease;
-}
-
-.content.expanded {
-  margin-left: 60px;
-}
-
+/* Chat */
 .chat-container {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: radial-gradient(circle at center, #ece7d5, #e9d8b5);
   transition: margin-left 0.3s ease;
+  align-items: center;
+  overflow-y: scroll;
 }
 
-/* Chat */
 .chat-messages {
   flex: 1;
   padding: 1rem;
-  overflow-y: auto;
-  background: radial-gradient(circle at top left, #fffdf7, #ede4d2);
+  margin-bottom: 200px;
+  overflow-y: visible;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  height: 100%;
 }
 .message {
   margin-bottom: 1rem;
@@ -144,7 +154,11 @@
   display: flex;
   padding: 1rem;
   background: #f0e7d8;
-  border-top: 3px ridge #7c5e3b;
+  border: 3px ridge #7c5e3b;
+  border-radius: 15px;
+  width: 70%;
+  position: fixed;
+  bottom: 0;
 }
 .chat-input input {
   flex: 1;
@@ -174,10 +188,23 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
-  padding: 0 10px;
 }
 
 .accordion-body.open {
-  max-height: 200px; /* adjust as needed */
-  padding: 10px;
+  max-height: 200px;
+  margin-bottom: 1rem;
+}
+
+.item {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0.5rem 0.8rem 0.5rem 1.5rem;
+  align-items: center;
+  text-decoration: none;
+  align-items: center;
+  cursor: pointer;
+}
+.item:hover {
+  background: #444;
 }

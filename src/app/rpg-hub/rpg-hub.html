@@ -1,18 +1,35 @@
 <main class="container">
   <!-- Sidebar -->
-  <aside class="sidebar" [class.collapsed]="showSidebar">
+  <aside class="sidebar" [class.collapsed]="!showSidebar">
     <nav>
+      <!-- Logo e menu -->
       <a href="#" (click)="toggleSidebar($event)">
-        @if (!showSidebar){
+        @if (showSidebar){
           <span class="label"><b>D</b>ungeon<b>M</b>ind</span>
         }
         <fa-icon class="icon" [icon]="faBars" />
       </a>
 
+      <!-- Criar registros -->
+      <a href="#">
+        <fa-icon class="icon" [icon]="faUserPlus" />
+        @if (showSidebar){
+          <span class="label">Novo Personagem</span>
+        }
+      </a>
+
+      <a href="#">
+        <fa-icon class="icon" [icon]="faPlus" />
+        @if (showSidebar){
+          <span class="label">Nova Campanha</span>
+        }
+      </a>
+      <hr style="width: 70%; border-color: #c9a66b;">
+
       <!-- Campanhas -->
       <a href="#" (click)="toggleCampaigns($event)">
         <fa-icon class="icon" [icon]="faBook" />
-        @if (!showSidebar){
+        @if (showSidebar){
           <span class="label">Campanhas</span>
           @if (!showCampaigns){
             <fa-icon class="last" [icon]="faCaretDown" />
@@ -23,14 +40,14 @@
       </a>
       <div class="accordion-body" [class.open]="showCampaigns">
         @for (item of items; track item.id; let i = $index) {
-          <div>{{ item.title }}</div>
+          <div class="item">{{ item.titulo }}</div>
         }
       </div>
 
       <!-- Personagens -->
       <a href="#" (click)="toggleCharacters($event)">
         <fa-icon class="icon" [icon]="faPeopleGroup" />
-        @if (!showSidebar){
+        @if (showSidebar){
           <span class="label">Personagens</span>
           @if (!showCharacters){
             <fa-icon class="last" [icon]="faCaretDown" />
@@ -40,15 +57,17 @@
         }
       </a>
       <div class="accordion-body" [class.open]="showCharacters">
-        @for (item of items; track item.id; let i = $index) {
-          <div>{{ item.title }}</div>
+        @for (char of characters; track char.id; let i = $index) {
+          <div class="item">
+            {{ `${char.nome} - ${char.classe} ${char.raca}` }}
+          </div>
         }
       </div>
 
       <!-- Configurações -->
-      <a href="#">
+      <a href="#" class="bottom" >
         <fa-icon class="icon" [icon]="faGear" />
-        @if (!showSidebar){
+        @if (showSidebar){
           <span class="label">Configurações</span>
         }
       </a>
@@ -58,6 +77,14 @@
   <!-- Main Chat -->
   <div class="chat-container">
     <div class="chat-messages">
+      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
+      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
+      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
+      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
+      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
+      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
+      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
+      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
       <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
       <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
     </div>
