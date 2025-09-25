@@ -4,7 +4,7 @@ import {
   faBars,
   faBook,
   faPeopleGroup,
-  faGear,
+  faArrowRightFromBracket,
   faPaperPlane,
   faCaretDown,
   faCaretUp,
@@ -24,7 +24,7 @@ export class RpgHub {
   faBars = faBars;
   faBook = faBook;
   faPeopleGroup = faPeopleGroup;
-  faGear = faGear;
+  faArrowRightFromBracket = faArrowRightFromBracket;
   faPaperPlane = faPaperPlane;
   faCaretUp = faCaretUp;
   faCaretDown = faCaretDown;
