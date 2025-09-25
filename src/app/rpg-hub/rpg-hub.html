@@ -1,1 +1,69 @@
-<p>rpg-hub works!</p>
+<main class="container">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.collapsed]="showSidebar">
+    <nav>
+      <a href="#" (click)="toggleSidebar($event)">
+        @if (!showSidebar){
+          <span class="label"><b>D</b>ungeon<b>M</b>ind</span>
+        }
+        <fa-icon class="icon" [icon]="faBars" />
+      </a>
+
+      <!-- Campanhas -->
+      <a href="#" (click)="toggleCampaigns($event)">
+        <fa-icon class="icon" [icon]="faBook" />
+        @if (!showSidebar){
+          <span class="label">Campanhas</span>
+          @if (!showCampaigns){
+            <fa-icon class="last" [icon]="faCaretDown" />
+          } @else {
+            <fa-icon class="last" [icon]="faCaretUp" />
+          }
+        }
+      </a>
+      <div class="accordion-body" [class.open]="showCampaigns">
+        @for (item of items; track item.id; let i = $index) {
+          <div>{{ item.title }}</div>
+        }
+      </div>
+
+      <!-- Personagens -->
+      <a href="#" (click)="toggleCharacters($event)">
+        <fa-icon class="icon" [icon]="faPeopleGroup" />
+        @if (!showSidebar){
+          <span class="label">Personagens</span>
+          @if (!showCharacters){
+            <fa-icon class="last" [icon]="faCaretDown" />
+          } @else {
+            <fa-icon class="last" [icon]="faCaretUp" />
+          }
+        }
+      </a>
+      <div class="accordion-body" [class.open]="showCharacters">
+        @for (item of items; track item.id; let i = $index) {
+          <div>{{ item.title }}</div>
+        }
+      </div>
+
+      <!-- Configurações -->
+      <a href="#">
+        <fa-icon class="icon" [icon]="faGear" />
+        @if (!showSidebar){
+          <span class="label">Configurações</span>
+        }
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Chat -->
+  <div class="chat-container">
+    <div class="chat-messages">
+      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
+      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
+    </div>
+    <div class="chat-input">
+      <input type="text" placeholder="Digite sua ação..." />
+      <button><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+    </div>
+  </div>
+</main>
