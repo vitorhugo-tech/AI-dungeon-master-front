@@ -46,6 +46,11 @@ export class RpgHub {
     { id: 1, titulo: 'As minas perdidas de Phandelver', personagem: 1 },
     { id: 2, titulo: 'A Maldição de Strahd', personagem: 3 },
     { id: 3, titulo: 'O Templo do Mal Elemental', personagem: 2 },
+    { id: 4, titulo: 'O Templo do Mal Elemental', personagem: 2 },
+    { id: 5, titulo: 'O Templo do Mal Elemental', personagem: 2 },
+    { id: 6, titulo: 'O Templo do Mal Elemental', personagem: 2 },
+    { id: 7, titulo: 'O Templo do Mal Elemental', personagem: 2 },
+    { id: 8, titulo: 'O Templo do Mal Elemental', personagem: 2 },
   ];
 
   showCampaigns = false;
@@ -59,6 +64,9 @@ export class RpgHub {
     { id: 1, nome: 'Gorr', classe: 'Guerreiro', raca: 'Orc' },
     { id: 2, nome: 'Athas', classe: 'Mago', raca: 'Elfo' },
     { id: 3, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
+    { id: 4, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
+    { id: 5, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
+    { id: 6, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
   ];
 
   showCharacters = false;

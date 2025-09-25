@@ -1,6 +1,6 @@
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
 }
 ::-webkit-scrollbar-thumb {
   background: #4b3523;
@@ -29,12 +29,16 @@
   border-right: 5px ridge #c9a66b;
   box-shadow: inset -4px 0 10px rgba(0, 0, 0, 0.7);
   z-index: 20;
+  overflow-y: scroll;
 }
 
 .sidebar nav {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: #c9a66b;
 }
 .sidebar a.bottom {
   margin-top: auto;
@@ -191,7 +195,7 @@
 }
 
 .accordion-body.open {
-  max-height: 200px;
+  max-height: 100%;
   margin-bottom: 1rem;
 }
 
