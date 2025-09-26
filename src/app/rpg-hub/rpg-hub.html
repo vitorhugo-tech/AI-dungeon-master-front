@@ -59,7 +59,7 @@
       <div class="accordion-body" [class.open]="showCharacters">
         @for (char of characters; track char.id; let i = $index) {
           <div class="item">
-            {{ `${char.nome} - ${char.classe} ${char.raca}` }}
+            {{ `${char.nome}, ${char.classe} ${char.raca}` }}
           </div>
         }
       </div>
@@ -88,9 +88,27 @@
       <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
       <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
     </div>
-    <div class="chat-input">
-      <input type="text" placeholder="Digite sua ação..." />
-      <button><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+    <div class="chat-options">
+      <div class="char-info">
+        <span class="info-id">
+          Lorith, Mago Elfo
+        </span>|
+        <span class="info-hp">
+          <fa-icon class="icon" [icon]="faHeart" />
+          8/20
+        </span>|
+        <span class="info-ep">
+          <fa-icon class="icon" [icon]="faBoltLightning" />
+          8/8
+        </span>|
+        <span class="info-lvl">Nível 3</span>|
+        <span class="info-xp">XP: 2/4</span>
+      </div>
+      <div class="chat-input">
+        <button><fa-icon class="icon" [icon]="faSackXmark" /></button>
+        <input type="text" placeholder="Digite sua ação..." />
+        <button><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+      </div>
     </div>
   </div>
 </main>

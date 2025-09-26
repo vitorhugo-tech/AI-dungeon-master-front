@@ -10,7 +10,10 @@ import {
   faCaretUp,
   faEllipsis,
   faUserPlus,
-  faPlus
+  faPlus,
+  faHeart,
+  faBoltLightning,
+  faSackXmark
 } from '@fortawesome/free-solid-svg-icons';
 import { MatExpansionModule } from '@angular/material/expansion';
 
@@ -31,6 +34,9 @@ export class RpgHub {
   faEllipsis = faEllipsis;
   faUserPlus = faUserPlus;
   faPlus = faPlus;
+  faHeart = faHeart;
+  faBoltLightning = faBoltLightning;
+  faSackXmark = faSackXmark
 
   showSidebar = true;
   toggleSidebar(event: Event) {
