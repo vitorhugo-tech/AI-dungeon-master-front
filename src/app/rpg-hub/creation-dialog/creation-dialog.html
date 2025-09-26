@@ -1,0 +1,69 @@
+<h2 mat-dialog-title class="flex">
+  <b>Criação de Personagem</b>
+  <button class="last" matButton="filled" mat-dialog-close><fa-icon [icon]="faXmark" /></button>
+</h2>
+
+<mat-dialog-content>
+  <div class="char-panel">
+    <form [formGroup]="characterForm" (ngSubmit)="create()">
+      <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input
+          type="text"
+          matInput
+          formControlName="nome"
+          [errorStateMatcher]="matcher"
+          placeholder="Digite um nome"
+        />
+        @if (characterForm.get('nome')?.hasError('required')) {
+          <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Classe</mat-label>
+        <mat-select formControlName="classe" [errorStateMatcher]="matcher">
+          @for (classe of classes; track classe) {
+            <mat-option [value]="classe">{{ classe }}</mat-option>
+          }
+        </mat-select>
+        @if (characterForm.get('classe')?.hasError('required')) {
+          <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Raça</mat-label>
+        <mat-select formControlName="raca" [errorStateMatcher]="matcher">
+          @for (raca of racas; track raca) {
+            <mat-option [value]="raca">{{ raca }}</mat-option>
+          }
+        </mat-select>
+        @if (characterForm.get('raca')?.hasError('required')) {
+          <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Origens (selecione duas)</mat-label>
+        <mat-select formControlName="origens" multiple >
+          @for (origem of origens; track origem) {
+            <mat-option
+              [value]="origem"
+              [disabled]="
+                characterForm.value.origens.length >= 2 &&
+                !characterForm.value.origens.includes(origem)
+              "
+            >
+              {{ origem }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (characterForm.get('origens')?.hasError('required')) {
+          <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+        }
+      </mat-form-field>
+      <button type="submit" matButton="filled">Entrar</button>
+      @if (this.characterError != '') {
+        <mat-error class="text-center">{{ this.characterError }}</mat-error>
+      }
+    </form>
+  </div>
+</mat-dialog-content>

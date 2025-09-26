@@ -1,0 +1,27 @@
+.char-panel {
+  padding: 0 2rem;
+}
+.char-panel form {
+  display: flex;
+  flex-direction: column;
+}
+
+.text-center {
+  text-align: center;
+}
+.mb-25 {
+  margin-bottom: 25px;
+}
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.last {
+  margin-left: auto;
+  background-color: red !important;
+}
+.last:hover {
+  margin-left: auto;
+  background-color: rgb(164, 2, 2) !important;
+}

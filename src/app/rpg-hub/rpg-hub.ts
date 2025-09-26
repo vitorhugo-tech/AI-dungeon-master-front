@@ -16,6 +16,8 @@ import {
   faSackXmark
 } from '@fortawesome/free-solid-svg-icons';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { CreationDialog } from './creation-dialog/creation-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-rpg-hub',
@@ -24,6 +26,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrl: './rpg-hub.scss',
 })
 export class RpgHub {
+  constructor(private dialog: MatDialog){}
+
   faBars = faBars;
   faBook = faBook;
   faPeopleGroup = faPeopleGroup;
@@ -80,5 +84,17 @@ export class RpgHub {
     event.preventDefault();
     this.showSidebar = true
     this.showCharacters = !this.showCharacters;
+  }
+
+  createCharacter(event: Event){
+    event.preventDefault();
+    this.dialog.open(CreationDialog, {
+      width: "800px",
+      data: {
+        title: 'Conta criada com sucesso',
+        message:
+          'Verifique a mensagem enviada para seu e-mail para terminar a criação de sua conta.',
+      },
+    });
   }
 }
