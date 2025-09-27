@@ -18,6 +18,8 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CreationDialog } from './creation-dialog/creation-dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rpg-hub',
@@ -26,7 +28,11 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './rpg-hub.scss',
 })
 export class RpgHub {
-  constructor(private dialog: MatDialog){}
+  constructor(
+    private dialog: MatDialog,
+    private auth: AuthService,
+    private router: Router,
+  ){}
 
   faBars = faBars;
   faBook = faBook;
@@ -43,8 +49,7 @@ export class RpgHub {
   faSackXmark = faSackXmark
 
   showSidebar = true;
-  toggleSidebar(event: Event) {
-    event.preventDefault();
+  toggleSidebar() {
     this.showSidebar = !this.showSidebar;
     if (!this.showSidebar){
       this.showCharacters = false
@@ -56,16 +61,10 @@ export class RpgHub {
     { id: 1, titulo: 'As minas perdidas de Phandelver', personagem: 1 },
     { id: 2, titulo: 'A Maldição de Strahd', personagem: 3 },
     { id: 3, titulo: 'O Templo do Mal Elemental', personagem: 2 },
-    { id: 4, titulo: 'O Templo do Mal Elemental', personagem: 2 },
-    { id: 5, titulo: 'O Templo do Mal Elemental', personagem: 2 },
-    { id: 6, titulo: 'O Templo do Mal Elemental', personagem: 2 },
-    { id: 7, titulo: 'O Templo do Mal Elemental', personagem: 2 },
-    { id: 8, titulo: 'O Templo do Mal Elemental', personagem: 2 },
   ];
 
   showCampaigns = false;
-  toggleCampaigns(event: Event) {
-    event.preventDefault();
+  toggleCampaigns() {
     this.showSidebar = true
     this.showCampaigns = !this.showCampaigns;
   }
@@ -74,20 +73,15 @@ export class RpgHub {
     { id: 1, nome: 'Gorr', classe: 'Guerreiro', raca: 'Orc' },
     { id: 2, nome: 'Athas', classe: 'Mago', raca: 'Elfo' },
     { id: 3, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
-    { id: 4, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
-    { id: 5, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
-    { id: 6, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
   ];
 
   showCharacters = false;
-  toggleCharacters(event: Event) {
-    event.preventDefault();
+  toggleCharacters() {
     this.showSidebar = true
     this.showCharacters = !this.showCharacters;
   }
 
-  createCharacter(event: Event){
-    event.preventDefault();
+  createCharacter(){
     this.dialog.open(CreationDialog, {
       width: "800px",
       data: {
@@ -96,5 +90,10 @@ export class RpgHub {
           'Verifique a mensagem enviada para seu e-mail para terminar a criação de sua conta.',
       },
     });
+  }
+
+  logout(){
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

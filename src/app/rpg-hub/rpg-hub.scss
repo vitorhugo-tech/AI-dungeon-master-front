@@ -7,6 +7,22 @@
   border-radius: 10px;
 }
 
+/* Remove estilos padrão de botões */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-shadow: none;
+  box-shadow: none;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 /* Sidebar */
 .container {
   margin: 0;
@@ -30,6 +46,7 @@
   box-shadow: inset -4px 0 10px rgba(0, 0, 0, 0.7);
   z-index: 20;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .sidebar nav {
@@ -40,7 +57,7 @@
 .sidebar::-webkit-scrollbar-thumb {
   background: #c9a66b;
 }
-.sidebar a.bottom {
+.sidebar button.bottom {
   margin-top: auto;
 }
 
@@ -48,7 +65,7 @@
   width: 60px;
 }
 
-.sidebar nav a {
+.sidebar nav button {
   display: flex;
   padding: 0.8rem;
   text-decoration: none;
@@ -57,13 +74,13 @@
   align-items: center;
   white-space: nowrap;
 }
-.sidebar nav a:first-of-type {
+.sidebar nav button:first-of-type {
   justify-content: space-between;
   & .icon {
     margin-right: 0;
   }
 }
-.sidebar nav a:first-of-type .label {
+.sidebar nav button:first-of-type .label {
   font-family: MorrisRoman;
   color: rgb(255, 174, 0);
   padding-left: 10px;
@@ -75,7 +92,7 @@
   }
 }
 
-.sidebar nav a:hover {
+.sidebar nav button:hover {
   background: #6a552b;
 }
 
