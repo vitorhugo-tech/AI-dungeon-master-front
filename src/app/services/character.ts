@@ -7,51 +7,64 @@ import { environment } from '../../enviroment';
 export class CharacterService {
   constructor(private http: HttpClient) {}
 
-  apiUrl = environment.apiUrl
+  apiUrl = environment.apiUrl + '/personagem'
+  token  = `Bearer ${localStorage.getItem('access_token')}`
 
-  login(data: { email: string, password: string }): Observable<any> {
-    const body = new HttpParams()
-      .set('username', data.email)
-      .set('password', data.password);
-
-    return this.http.post(`${this.apiUrl}/auth/login`, body.toString(), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  list(): Observable<any> {
+    return this.http.get(this.apiUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.token
+      }
     });
   }
 
-  create(data: { email: string, password: string, username?: string }): Observable<any> {
-    data.username = data.email
-    return this.http.post(`${this.apiUrl}/users/adiciona`, data, {
+  create(data: { nome: string, classe: string, raca: string, origens: string[] | string, atr?: object }): Observable<any> {
+    data.atr = { STR: 1, AGI: 1, RES: 1, INT: 1, PER: 1, DET: 1 };
+    data.origens = data.origens[0] + ' e ' + data.origens[1];
+
+    if (data.classe == 'Guerreiro') data.atr = { STR: 4, AGI: 3, RES: 4, INT: 1, PER: 2, DET: 2 };
+    if (data.classe == 'Mago')      data.atr = { STR: 1, AGI: 2, RES: 1, INT: 5, PER: 4, DET: 3 };
+    if (data.classe == 'Ladino')    data.atr = { STR: 2, AGI: 4, RES: 2, INT: 2, PER: 3, DET: 3 };
+    if (data.classe == 'Clérigo')   data.atr = { STR: 2, AGI: 1, RES: 3, INT: 3, PER: 4, DET: 3 };
+
+    return this.http.post(this.apiUrl, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.token
+      }
+    });
+  }
+
+  get(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`, {
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  saveTokens(data: { access_token: string, refresh_token: string }) {
-    localStorage.setItem('access_token', data.access_token);
-    localStorage.setItem('refresh_token', data.refresh_token);
-  }
+  update(data: {personagem_id: string, nome: string, classe: string, raca: string, origens: string[] | string, atr?: object }): Observable<any> {
+    data.atr = { STR: 1, AGI: 1, RES: 1, INT: 1, PER: 1, DET: 1 };
+    data.origens = data.origens[0] + ' e ' + data.origens[1];
 
-  getTokens(): object {
-    return {
-      access_token: localStorage.getItem('access_token'),
-      refresh_token: localStorage.getItem('refresh_token')
-    }
-  }
+    if (data.classe == 'Guerreiro') data.atr = { STR: 4, AGI: 3, RES: 4, INT: 1, PER: 2, DET: 2 };
+    if (data.classe == 'Mago')      data.atr = { STR: 1, AGI: 2, RES: 1, INT: 5, PER: 4, DET: 3 };
+    if (data.classe == 'Ladino')    data.atr = { STR: 2, AGI: 4, RES: 2, INT: 2, PER: 3, DET: 3 };
+    if (data.classe == 'Clérigo')   data.atr = { STR: 2, AGI: 1, RES: 3, INT: 3, PER: 4, DET: 3 };
 
-  logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-  }
-
-  isLoggedIn(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/test-token`, '', {
+    return this.http.put(`${this.apiUrl}/${data.personagem_id}`, data, {
       headers: {
-        'accept': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        'Content-Type': 'application/json',
+        'Authorization': this.token
       }
-    }).pipe(
-      map(() => true),
-      catchError(() => of(false))
-    );;
+    });
+  }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.token
+      }
+    });
   }
 }

@@ -5,6 +5,7 @@ import {
   MatDialogClose,
   MatDialogContent,
   MatDialogTitle,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -19,6 +20,8 @@ import {
   NgForm,
   ReactiveFormsModule,
   FormsModule,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -68,31 +71,40 @@ export class CreationDialog {
   matcher = new MyErrorStateMatcher();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string },
-    private fb: FormBuilder
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      personagem_id: string;
+      nome: string;
+      classe: string;
+      raca: string;
+      origens: string[];
+    },
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<CreationDialog>
   ) {
     this.characterForm = this.fb.group({
-      nome: ['', Validators.required],
-      classe: ['', Validators.required],
-      raca: ['', Validators.required],
-      origens: ['', Validators.required]
+      personagem_id: [data?.personagem_id || ''],
+      nome: [data?.nome || '', Validators.required],
+      classe: [data?.classe || '', Validators.required],
+      raca: [data?.raca || '', Validators.required],
+      origens: [data?.origens || [], [Validators.required, this.minSelected(2)]],
     });
   }
 
-  create() {
+  minSelected(min: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value || [];
+      return value.length >= min ? null : { minSelected: true };
+    };
+  }
+
+  sendData() {
     this.characterError = '';
-    if (this.characterForm.valid) {
-      console.log(this.characterForm.value);
-      /* this.auth.login(this.characterForm.value).subscribe({
-        next: (res: any) => {
-          this.auth.saveTokens(res);
-          this.router.navigate(['/session']);
-        },
-        error: (err: any) => {
-          this.characterError = err.error.detail;
-          console.error('Erro na criação do personagem:', err);
-        },
-      }); */
+    if (!this.characterForm.valid) {
+      this.characterError = 'Corrija os erros restantes para poder salvar seu personagem';
+      return;
     }
+    const payload = this.characterForm.value;
+    this.dialogRef.close(payload);
   }
 }

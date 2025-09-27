@@ -5,7 +5,7 @@
 
 <mat-dialog-content>
   <div class="char-panel">
-    <form [formGroup]="characterForm" (ngSubmit)="create()">
+    <form [formGroup]="characterForm" (ngSubmit)="sendData()">
       <mat-form-field>
         <mat-label>Nome</mat-label>
         <input
@@ -58,9 +58,11 @@
         </mat-select>
         @if (characterForm.get('origens')?.hasError('required')) {
           <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+        } @else if (characterForm.get('origens')?.hasError('minSelected')) {
+          <mat-error>Você precisa selecionar <strong>duas</strong> origens</mat-error>
         }
       </mat-form-field>
-      <button type="submit" matButton="filled">Entrar</button>
+      <button type="submit" matButton="filled">Salvar</button>
       @if (this.characterError != '') {
         <mat-error class="text-center">{{ this.characterError }}</mat-error>
       }

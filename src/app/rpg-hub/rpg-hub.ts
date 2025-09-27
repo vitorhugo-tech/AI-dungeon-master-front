@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faBars,
@@ -13,13 +13,17 @@ import {
   faPlus,
   faHeart,
   faBoltLightning,
-  faSackXmark
+  faSackXmark,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { CreationDialog } from './creation-dialog/creation-dialog';
 import { MatDialog } from '@angular/material/dialog';
-import { AuthService } from '../services/auth';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Dialog } from '../dialog/dialog';
+import { CreationDialog } from './creation-dialog/creation-dialog';
+import { AuthService } from '../services/auth';
+import { CharacterService } from '../services/character';
 
 @Component({
   selector: 'app-rpg-hub',
@@ -31,8 +35,11 @@ export class RpgHub {
   constructor(
     private dialog: MatDialog,
     private auth: AuthService,
-    private router: Router,
-  ){}
+    private character: CharacterService,
+    private router: Router
+  ) {
+    this.listCharacters();
+  }
 
   faBars = faBars;
   faBook = faBook;
@@ -46,15 +53,35 @@ export class RpgHub {
   faPlus = faPlus;
   faHeart = faHeart;
   faBoltLightning = faBoltLightning;
-  faSackXmark = faSackXmark
+  faSackXmark = faSackXmark;
+  faXmark = faXmark;
 
   showSidebar = true;
   toggleSidebar() {
     this.showSidebar = !this.showSidebar;
-    if (!this.showSidebar){
-      this.showCharacters = false
-      this.showCampaigns = false
+    if (!this.showSidebar) {
+      this.showCharacters = false;
+      this.showCampaigns = false;
     }
+  }
+
+  characters: any = [];
+  listCharacters() {
+    this.character.list().subscribe({
+      next: (res: any) => {
+        this.characters = res;
+      },
+      error: (err: any) => {
+        alert('Erro ao listar personagens');
+        console.error('Erro ao listar personagens:', err);
+      },
+    });
+  }
+
+  showCharacters = false;
+  toggleCharacters() {
+    this.showSidebar = true;
+    this.showCharacters = !this.showCharacters;
   }
 
   items = [
@@ -65,34 +92,103 @@ export class RpgHub {
 
   showCampaigns = false;
   toggleCampaigns() {
-    this.showSidebar = true
+    this.showSidebar = true;
     this.showCampaigns = !this.showCampaigns;
   }
 
-  characters = [
-    { id: 1, nome: 'Gorr', classe: 'Guerreiro', raca: 'Orc' },
-    { id: 2, nome: 'Athas', classe: 'Mago', raca: 'Elfo' },
-    { id: 3, nome: 'Jack', classe: 'Ladino', raca: 'Humano' },
-  ];
-
-  showCharacters = false;
-  toggleCharacters() {
-    this.showSidebar = true
-    this.showCharacters = !this.showCharacters;
+  snackBar = inject(MatSnackBar);
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action);
   }
 
-  createCharacter(){
-    this.dialog.open(CreationDialog, {
-      width: "800px",
+  createCharacter() {
+    const dialogRef = this.dialog.open(CreationDialog, { width: '800px' });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        delete result.personagem_id;
+
+        this.character.create(result).subscribe({
+          next: (res: any) => {
+            this.listCharacters();
+            this.openSnackBar('Personagem criado!', 'Fechar');
+          },
+          error: (err: any) => {
+            this.dialog.open(Dialog, {
+              width: '800px',
+              data: {
+                title: 'Erro ao criar personagem!',
+                message: 'Tente novamente, caso o erro persista contacte o desenvolvedor.',
+              },
+            });
+            console.error('Erro ao criar personagem:', err);
+          },
+        });
+      }
+    });
+  }
+
+  editCharacter(personagem_id: string) {
+    const data = Object.assign({}, this.characters.find(
+      (char: { personagem_id: string }) => char.personagem_id === personagem_id
+    ));
+    data.origens = data.origens.split(" e ")
+
+    const dialogRef = this.dialog.open(CreationDialog, {
+      width: '800px',
       data: {
-        title: 'Conta criada com sucesso',
-        message:
-          'Verifique a mensagem enviada para seu e-mail para terminar a criação de sua conta.',
+        personagem_id: data.personagem_id,
+        nome: data.nome,
+        classe: data.classe,
+        raca: data.raca,
+        origens: data.origens,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.character.update(result).subscribe({
+          next: (res: any) => {
+            this.listCharacters();
+            this.openSnackBar('Personagem alterado!', 'Fechar');
+          },
+          error: (err: any) => {
+            this.dialog.open(Dialog, {
+              width: '800px',
+              data: {
+                title: 'Erro ao alterar personagem!',
+                message: 'Tente novamente, caso o erro persista contacte o desenvolvedor.',
+              },
+            });
+            console.error('Erro ao alterar personagem:', err);
+          },
+        });
+      }
+    });
+  }
+
+  deleteCharacter(personagem_id: string) {
+    if (!confirm('Tem certeza que quer apagar esse personagem?')) return;
+
+    this.character.delete(personagem_id).subscribe({
+      next: (res: any) => {
+        this.listCharacters();
+        this.openSnackBar('Personagem apagado!', 'Fechar');
+      },
+      error: (err: any) => {
+        this.dialog.open(Dialog, {
+          width: '800px',
+          data: {
+            title: 'Erro ao apagar personagem!',
+            message: 'Tente novamente, caso o erro persista contacte o desenvolvedor.',
+          },
+        });
+        console.error('Erro ao apagar personagem:', err);
       },
     });
   }
 
-  logout(){
+  logout() {
     this.auth.logout();
     this.router.navigate(['/login']);
   }

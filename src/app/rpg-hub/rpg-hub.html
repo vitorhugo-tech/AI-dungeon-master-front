@@ -40,7 +40,10 @@
       </button>
       <div class="accordion-body" [class.open]="showCampaigns">
         @for (item of items; track item.id; let i = $index) {
-          <div class="item">{{ item.titulo }}</div>
+          <div class="item">
+            <span>{{ item.titulo }}</span>
+            <button class="delete"><fa-icon [icon]="faXmark" /></button>
+          </div>
         }
       </div>
 
@@ -57,9 +60,10 @@
         }
       </button>
       <div class="accordion-body" [class.open]="showCharacters">
-        @for (char of characters; track char.id; let i = $index) {
+        @for (char of characters; track char.personagem_id; let i = $index) {
           <div class="item">
-            {{ `${char.nome}, ${char.classe} ${char.raca}` }}
+            <span (click)="editCharacter(char.personagem_id)">{{ `${char.nome}, ${char.classe} ${char.raca}` }}</span>
+            <button class="delete" (click)="deleteCharacter(char.personagem_id)"><fa-icon [icon]="faXmark" /></button>
           </div>
         }
       </div>

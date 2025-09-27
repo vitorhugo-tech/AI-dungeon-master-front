@@ -65,7 +65,7 @@ button {
   width: 60px;
 }
 
-.sidebar nav button {
+.sidebar nav > button {
   display: flex;
   padding: 0.8rem;
   text-decoration: none;
@@ -74,13 +74,13 @@ button {
   align-items: center;
   white-space: nowrap;
 }
-.sidebar nav button:first-of-type {
+.sidebar nav > button:first-of-type {
   justify-content: space-between;
   & .icon {
     margin-right: 0;
   }
 }
-.sidebar nav button:first-of-type .label {
+.sidebar nav > button:first-of-type .label {
   font-family: MorrisRoman;
   color: rgb(255, 174, 0);
   padding-left: 10px;
@@ -92,7 +92,7 @@ button {
   }
 }
 
-.sidebar nav button:hover {
+.sidebar nav > button:hover {
   background: #6a552b;
 }
 
@@ -247,6 +247,7 @@ button {
 }
 
 .item {
+  display: flex;
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -255,6 +256,25 @@ button {
   text-decoration: none;
   align-items: center;
   cursor: pointer;
+}
+.item span {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.item:hover .delete {
+  visibility: visible;
+}
+.delete {
+  visibility: hidden;
+  padding: 0.1rem !important;
+  margin-left: auto;
+  font-size: 1rem;
+  color: rgb(218, 61, 61);
+}
+.delete:hover {
+  color: white;
+  background-color: red;
+  border-radius: 25px;
 }
 .item:hover {
   background: #444;
