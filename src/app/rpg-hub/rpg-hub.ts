@@ -19,16 +19,32 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Dialog } from '../dialog/dialog';
 import { CreationDialog } from './creation-dialog/creation-dialog';
 import { AuthService } from '../services/auth';
 import { CharacterService } from '../services/character';
 import { CampaignService } from '../services/campaign';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, Validators, FormsModule, FormGroupDirective, NgForm } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class FieldErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+}
 
 @Component({
   selector: 'app-rpg-hub',
-  imports: [FontAwesomeModule, MatExpansionModule],
+  imports: [
+    FontAwesomeModule,
+    MatExpansionModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './rpg-hub.html',
   styleUrl: './rpg-hub.scss',
 })
@@ -42,6 +58,28 @@ export class RpgHub {
   ) {
     this.listCharacters();
     this.listCampaigns();
+  }
+
+  /* Seleção de campanha e personagem ativos */
+  matcher = new FieldErrorStateMatcher();
+
+  personagem_id = new FormControl('', Validators.required);
+  selectedCharacter: any = {};
+
+  selectCharacter(){
+    this.selectedCharacter = Object.assign({}, this.characters.find(
+      (char: { personagem_id: string }) => char.personagem_id === this.personagem_id.value
+    ));
+  }
+
+  selectedCampaign: any = {};
+
+  selectCampaign(campanha_id: string){
+    this.selectedCampaign = Object.assign({}, this.campaigns.find(
+      (campaign: { campanha_id: string }) => campaign.campanha_id === campanha_id
+    ));
+    this.personagem_id.setValue(this.selectedCampaign.personagem);
+    this.selectCharacter();
   }
 
   /* Ícones */
@@ -165,6 +203,10 @@ export class RpgHub {
     this.character.delete(personagem_id).subscribe({
       next: (res: any) => {
         this.listCharacters();
+        if (this.selectedCharacter.personagem_id == personagem_id) {
+          this.personagem_id.setValue('');
+          this.selectedCharacter = {};
+        }
         this.openSnackBar('Personagem apagado!', 'Fechar');
       },
       error: (err: any) => this.openAlert('Erro ao apagar personagem!', err),
@@ -173,9 +215,14 @@ export class RpgHub {
 
   /* Funções CRUD campanhas */
   campaigns: any = [];
-  listCampaigns() {
+  listCampaigns(campanha_id: string = '') {
     this.campaign.list().subscribe({
-      next: (res: any) => this.campaigns = res,
+      next: (res: any) => {
+        this.campaigns = res;
+        if (campanha_id){
+          this.selectCampaign(campanha_id);
+        }
+      },
       error: (err: any) => this.openAlert('Erro ao listar campanhas!', err),
     });
   }
@@ -184,12 +231,12 @@ export class RpgHub {
     const data = {
       titulo: "A Maldição de Strahd",
       descricao: "Aventura com elementos de terror",
-      personagem_id: "4b6a5b77-4b6d-4e69-8d75-b9ac9d6c2eb5",
+      personagem_id: this.personagem_id.value,
     }
 
     this.campaign.create(data).subscribe({
       next: (res: any) => {
-        this.listCampaigns();
+        this.listCampaigns(res.campanha_id);
         this.openSnackBar('Campanha criada!', 'Fechar');
       },
       error: (err: any) => this.openAlert('Erro ao criar campanha!', err),
@@ -221,6 +268,9 @@ export class RpgHub {
     this.campaign.delete(campanha_id).subscribe({
       next: (res: any) => {
         this.listCampaigns();
+        if (this.selectedCampaign.campanha_id == campanha_id) {
+          this.selectedCampaign = {};
+        }
         this.openSnackBar('Campanha apagada!', 'Fechar');
       },
       error: (err: any) => this.openAlert('Erro ao apagar campanha!', err),

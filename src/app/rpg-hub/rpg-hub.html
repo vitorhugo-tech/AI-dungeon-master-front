@@ -19,7 +19,7 @@
       </button>
 
       @if (characters.length){
-        <button (click)="createCampaign()">
+        <button (click)="selectedCampaign = {}">
           <fa-icon class="icon" [icon]="faPlus" />
           @if (showSidebar){
             <span class="label">Nova Campanha</span>
@@ -43,9 +43,9 @@
           }
         </button>
         <div class="accordion-body" [class.open]="showCampaigns">
-          @for (campaign of campaigns; track campaign.id; let i = $index) {
+          @for (campaign of campaigns; track campaign.campanha_id; let i = $index) {
             <div class="item">
-              <span (click)="editCampaign(campaign.campanha_id)">{{ campaign.titulo }}</span>
+              <span (click)="selectCampaign(campaign.campanha_id)">{{ campaign.titulo }}</span>
               <button class="delete" (click)="deleteCampaign(campaign.campanha_id)"><fa-icon [icon]="faXmark" /></button>
             </div>
           }
@@ -88,40 +88,56 @@
   <!-- Main Chat -->
   <div class="chat-container">
     <div class="chat-messages">
-      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
-      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
-      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
-      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
-      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
-      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
-      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
-      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
-      <div class="message ai"><span>Saudações, aventureiro! Pronto para começar sua jornada?</span></div>
-      <div class="message user"><span>Sim! Conte-me sobre a vila onde o jogo começa.</span></div>
     </div>
-    <div class="chat-options">
+    <div class="chat-options" [class.center]="!selectedCampaign.campanha_id">
       <div class="char-info">
-        <span class="info-id">
-          Lorith, Mago Elfo
-        </span>|
-        <span class="info-hp">
-          <fa-icon class="icon" [icon]="faHeart" />
-          8/20
-        </span>|
-        <span class="info-ep">
-          <fa-icon class="icon" [icon]="faBoltLightning" />
-          8/8
-        </span>
-        <!-- TODO: Implementar sistema de níveis -->
-        <!-- |
-        <span class="info-lvl">Nível 3</span>|
-        <span class="info-xp">XP: 2/4</span> -->
+        @if (personagem_id.value) {
+          <span class="info-id">
+            {{ selectedCharacter?.nome }}
+          </span>|
+          <span class="info-hp">
+            <fa-icon class="icon" [icon]="faHeart" />
+            {{ `${selectedCharacter?.stats.pv}/${selectedCharacter?.stats.pv_max}` }}
+          </span>|
+          <span class="info-ep">
+            <fa-icon class="icon" [icon]="faBoltLightning" />
+            {{ `${selectedCharacter?.stats.pe}/${selectedCharacter?.stats.pe_max}` }}
+          </span>
+          <!-- TODO: Implementar sistema de níveis -->
+          <!-- |
+          <span class="info-lvl">Nível {{ selectedCharacter.level }}</span>|
+          <span class="info-xp">XP: {{ `${selectedCharacter.xp}/${selectedCharacter.level + 2}` }}</span> -->
+        }
       </div>
+
       <div class="chat-input">
         <!-- TODO: Implementar inventário -->
         <!-- <button><fa-icon class="icon" [icon]="faSackXmark" /></button> -->
-        <input type="text" placeholder="Digite sua ação..." />
-        <button><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+        @if (!characters.length) {
+          <button class="w-full" (click)="createCharacter()">
+            <fa-icon class="icon" [icon]="faUserPlus" />
+            Novo personagem
+          </button>
+        } @else if (!selectedCampaign.campanha_id) {
+          <mat-form-field class="w-full" >
+            <mat-label>Personagem</mat-label>
+            <mat-select [formControl]="personagem_id" [errorStateMatcher]="matcher" (selectionChange)="selectCharacter()">
+              @for (char of characters; track char.personagem_id) {
+                <mat-option [value]="char.personagem_id">{{ `${char.nome}, ${char.classe} ${char.raca}` }}</mat-option>
+              }
+            </mat-select>
+            @if (!personagem_id.valid) {
+              <mat-error>Selecionar um personagem é <strong>obrigatório</strong></mat-error>
+            }
+          </mat-form-field>
+          <button class="mb-20" (click)="createCampaign()">
+            <fa-icon class="icon" [icon]="faUserPlus" />
+            Iniciar nova campanha
+          </button>
+        } @else {
+          <input type="text" placeholder="Digite sua ação..." />
+          <button><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+        }
       </div>
     </div>
   </div>

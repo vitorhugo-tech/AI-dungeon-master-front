@@ -26,7 +26,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-export class MyErrorStateMatcher implements ErrorStateMatcher {
+export class FormErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
@@ -68,7 +68,7 @@ export class CreationDialog {
 
   characterForm: FormGroup;
   characterError: string = '';
-  matcher = new MyErrorStateMatcher();
+  matcher = new FormErrorStateMatcher();
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

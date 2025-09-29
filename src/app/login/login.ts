@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 import { Dialog } from '../dialog/dialog';
 
-export class MyErrorStateMatcher implements ErrorStateMatcher {
+export class FormErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
@@ -48,7 +48,7 @@ export class Login {
   recoverForm: FormGroup;
   confirmationForm: FormGroup;
   passwordResetForm: FormGroup;
-  matcher = new MyErrorStateMatcher();
+  matcher = new FormErrorStateMatcher();
   selectedTabIndex = 0;
 
   constructor(
