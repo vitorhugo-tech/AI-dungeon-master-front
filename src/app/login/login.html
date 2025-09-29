@@ -47,14 +47,16 @@
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
-            <button type="submit" matButton="filled">Entrar</button>
+            <button type="submit" class="btn">Entrar</button>
             @if (this.loginError != ''){
               <mat-error class="text-center">{{ this.loginError }}</mat-error>
             }
           </form>
           <div class="links">
-            <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a> |
-            <a title="Esqueceu a senha?" (click)="goToTab(2)">Esqueceu a senha?</a>
+            <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a>
+            <!-- TODO: Implementar reset de senha -->
+            <!--  |
+            <a title="Esqueceu a senha?" (click)="goToTab(2)">Esqueceu a senha?</a> -->
           </div>
         </mat-tab>
         <!-- Criar -->
@@ -105,7 +107,7 @@
                 <mat-error>Este campo deve conter no mínimo <strong>5 digitos</strong></mat-error>
               }
             </mat-form-field>
-            <button type="submit" matButton="filled">Criar</button>
+            <button type="submit" class="btn">Criar</button>
             @if (this.signupError != ''){
               <mat-error class="text-center">Não foi possível criar sua conta. Certifique-se de que o e-mail informado é valido</mat-error>
             }
@@ -114,8 +116,9 @@
             <a title="Entre com uma conta existente" (click)="goToTab(0)">Entre com uma conta existente</a>
           </div>
         </mat-tab>
+        <!-- TODO: Implementar reset de senha -->
         <!-- Recuperar -->
-        <mat-tab>
+<!--         <mat-tab>
           <h2>Recupere sua senha</h2>
           <form [formGroup]="recoverForm" (ngSubmit)="onSubmit(this.recoverForm.value)">
             <mat-form-field>
@@ -140,9 +143,9 @@
             <a title="Entre com uma conta existente" (click)="goToTab(0)">Entre com uma conta existente</a> |
             <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a>
           </div>
-        </mat-tab>
+        </mat-tab> -->
         <!-- Confirmação -->
-        <mat-tab>
+        <!-- <mat-tab>
           <h2>Insira o código enviado ao seu e-mail</h2>
           <form [formGroup]="confirmationForm" (ngSubmit)="onSubmit(this.confirmationForm.value)">
             <mat-form-field>
@@ -163,9 +166,9 @@
           <div class="links">
             <a title="Retornar" (click)="goToTab(3)">Retornar</a>
           </div>
-        </mat-tab>
+        </mat-tab> -->
         <!-- Redefinição -->
-        <mat-tab>
+        <!-- <mat-tab>
           <h2>Redefina sua senha</h2>
           <form [formGroup]="passwordResetForm" (ngSubmit)="onSubmit(this.passwordResetForm.value)">
             <mat-form-field>
@@ -197,7 +200,7 @@
           <div class="links">
             <a title="Retornar" (click)="goToTab(4)">Retornar</a>
           </div>
-        </mat-tab>
+        </mat-tab> -->
       </mat-tab-group>
     </article>
   </section>

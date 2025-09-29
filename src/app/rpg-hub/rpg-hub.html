@@ -18,55 +18,62 @@
         }
       </button>
 
-      <button>
-        <fa-icon class="icon" [icon]="faPlus" />
-        @if (showSidebar){
-          <span class="label">Nova Campanha</span>
-        }
-      </button>
-      <hr style="width: 70%; border-color: #c9a66b;">
-
-      <!-- Campanhas -->
-      <button (click)="toggleCampaigns()">
-        <fa-icon class="icon" [icon]="faBook" />
-        @if (showSidebar){
-          <span class="label">Campanhas</span>
-          @if (!showCampaigns){
-            <fa-icon class="last" [icon]="faCaretDown" />
-          } @else {
-            <fa-icon class="last" [icon]="faCaretUp" />
+      @if (characters.length){
+        <button (click)="createCampaign()">
+          <fa-icon class="icon" [icon]="faPlus" />
+          @if (showSidebar){
+            <span class="label">Nova Campanha</span>
           }
-        }
-      </button>
-      <div class="accordion-body" [class.open]="showCampaigns">
-        @for (item of items; track item.id; let i = $index) {
-          <div class="item">
-            <span>{{ item.titulo }}</span>
-            <button class="delete"><fa-icon [icon]="faXmark" /></button>
-          </div>
-        }
-      </div>
+        </button>
+      }
+      @if (campaigns.length || characters.length){
+        <hr class="bar">
+      }
+      <!-- Campanhas -->
+      @if (campaigns.length){
+        <button (click)="toggleCampaigns()">
+          <fa-icon class="icon" [icon]="faBook" />
+          @if (showSidebar){
+            <span class="label">Campanhas</span>
+            @if (!showCampaigns){
+              <fa-icon class="last" [icon]="faCaretDown" />
+            } @else {
+              <fa-icon class="last" [icon]="faCaretUp" />
+            }
+          }
+        </button>
+        <div class="accordion-body" [class.open]="showCampaigns">
+          @for (campaign of campaigns; track campaign.id; let i = $index) {
+            <div class="item">
+              <span (click)="editCampaign(campaign.campanha_id)">{{ campaign.titulo }}</span>
+              <button class="delete" (click)="deleteCampaign(campaign.campanha_id)"><fa-icon [icon]="faXmark" /></button>
+            </div>
+          }
+        </div>
+      }
 
       <!-- Personagens -->
-      <button (click)="toggleCharacters()">
-        <fa-icon class="icon" [icon]="faPeopleGroup" />
-        @if (showSidebar){
-          <span class="label">Personagens</span>
-          @if (!showCharacters){
-            <fa-icon class="last" [icon]="faCaretDown" />
-          } @else {
-            <fa-icon class="last" [icon]="faCaretUp" />
+      @if (characters.length){
+        <button (click)="toggleCharacters()">
+          <fa-icon class="icon" [icon]="faPeopleGroup" />
+          @if (showSidebar){
+            <span class="label">Personagens</span>
+            @if (!showCharacters){
+              <fa-icon class="last" [icon]="faCaretDown" />
+            } @else {
+              <fa-icon class="last" [icon]="faCaretUp" />
+            }
           }
-        }
-      </button>
-      <div class="accordion-body" [class.open]="showCharacters">
-        @for (char of characters; track char.personagem_id; let i = $index) {
-          <div class="item">
-            <span (click)="editCharacter(char.personagem_id)">{{ `${char.nome}, ${char.classe} ${char.raca}` }}</span>
-            <button class="delete" (click)="deleteCharacter(char.personagem_id)"><fa-icon [icon]="faXmark" /></button>
-          </div>
-        }
-      </div>
+        </button>
+        <div class="accordion-body" [class.open]="showCharacters">
+          @for (char of characters; track char.personagem_id; let i = $index) {
+            <div class="item">
+              <span (click)="editCharacter(char.personagem_id)">{{ `${char.nome}, ${char.classe} ${char.raca}` }}</span>
+              <button class="delete" (click)="deleteCharacter(char.personagem_id)"><fa-icon [icon]="faXmark" /></button>
+            </div>
+          }
+        </div>
+      }
 
       <!-- Sair -->
       <button class="bottom" (click)="logout()">
@@ -104,12 +111,15 @@
         <span class="info-ep">
           <fa-icon class="icon" [icon]="faBoltLightning" />
           8/8
-        </span>|
+        </span>
+        <!-- TODO: Implementar sistema de níveis -->
+        <!-- |
         <span class="info-lvl">Nível 3</span>|
-        <span class="info-xp">XP: 2/4</span>
+        <span class="info-xp">XP: 2/4</span> -->
       </div>
       <div class="chat-input">
-        <button><fa-icon class="icon" [icon]="faSackXmark" /></button>
+        <!-- TODO: Implementar inventário -->
+        <!-- <button><fa-icon class="icon" [icon]="faSackXmark" /></button> -->
         <input type="text" placeholder="Digite sua ação..." />
         <button><fa-icon class="icon" [icon]="faPaperPlane" /></button>
       </div>

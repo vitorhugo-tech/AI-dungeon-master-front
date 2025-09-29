@@ -24,6 +24,7 @@ import { Dialog } from '../dialog/dialog';
 import { CreationDialog } from './creation-dialog/creation-dialog';
 import { AuthService } from '../services/auth';
 import { CharacterService } from '../services/character';
+import { CampaignService } from '../services/campaign';
 
 @Component({
   selector: 'app-rpg-hub',
@@ -36,11 +37,14 @@ export class RpgHub {
     private dialog: MatDialog,
     private auth: AuthService,
     private character: CharacterService,
+    private campaign: CampaignService,
     private router: Router
   ) {
     this.listCharacters();
+    this.listCampaigns();
   }
 
+  /* Ícones */
   faBars = faBars;
   faBook = faBook;
   faPeopleGroup = faPeopleGroup;
@@ -56,6 +60,7 @@ export class RpgHub {
   faSackXmark = faSackXmark;
   faXmark = faXmark;
 
+  /* Funções de exibição da sidebar */
   showSidebar = true;
   toggleSidebar() {
     this.showSidebar = !this.showSidebar;
@@ -65,30 +70,11 @@ export class RpgHub {
     }
   }
 
-  characters: any = [];
-  listCharacters() {
-    this.character.list().subscribe({
-      next: (res: any) => {
-        this.characters = res;
-      },
-      error: (err: any) => {
-        alert('Erro ao listar personagens');
-        console.error('Erro ao listar personagens:', err);
-      },
-    });
-  }
-
   showCharacters = false;
   toggleCharacters() {
     this.showSidebar = true;
     this.showCharacters = !this.showCharacters;
   }
-
-  items = [
-    { id: 1, titulo: 'As minas perdidas de Phandelver', personagem: 1 },
-    { id: 2, titulo: 'A Maldição de Strahd', personagem: 3 },
-    { id: 3, titulo: 'O Templo do Mal Elemental', personagem: 2 },
-  ];
 
   showCampaigns = false;
   toggleCampaigns() {
@@ -96,9 +82,33 @@ export class RpgHub {
     this.showCampaigns = !this.showCampaigns;
   }
 
+  /* Utilidades */
+  defaultErrorMsg = 'Tente novamente, caso o erro persista contacte o desenvolvedor.';
+
   snackBar = inject(MatSnackBar);
   openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action);
+    this.snackBar.open(message, action, {
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      duration: 5000
+    });
+  }
+
+  openAlert(errorTitle: string, err: any, errorMsg: string = this.defaultErrorMsg) {
+    this.dialog.open(Dialog, {
+      width: '800px',
+      data: { title: errorTitle, message: errorMsg },
+    });
+    console.error(errorTitle, err);
+  }
+
+  /* Funções CRUD personagens */
+  characters: any = [];
+  listCharacters() {
+    this.character.list().subscribe({
+      next: (res: any) => this.characters = res,
+      error: (err: any) => this.openAlert('Erro ao listar personagens!', err),
+    });
   }
 
   createCharacter() {
@@ -113,16 +123,7 @@ export class RpgHub {
             this.listCharacters();
             this.openSnackBar('Personagem criado!', 'Fechar');
           },
-          error: (err: any) => {
-            this.dialog.open(Dialog, {
-              width: '800px',
-              data: {
-                title: 'Erro ao criar personagem!',
-                message: 'Tente novamente, caso o erro persista contacte o desenvolvedor.',
-              },
-            });
-            console.error('Erro ao criar personagem:', err);
-          },
+          error: (err: any) => this.openAlert('Erro ao criar personagem!', err),
         });
       }
     });
@@ -152,16 +153,7 @@ export class RpgHub {
             this.listCharacters();
             this.openSnackBar('Personagem alterado!', 'Fechar');
           },
-          error: (err: any) => {
-            this.dialog.open(Dialog, {
-              width: '800px',
-              data: {
-                title: 'Erro ao alterar personagem!',
-                message: 'Tente novamente, caso o erro persista contacte o desenvolvedor.',
-              },
-            });
-            console.error('Erro ao alterar personagem:', err);
-          },
+          error: (err: any) => this.openAlert('Erro ao alterar personagem!', err),
         });
       }
     });
@@ -175,19 +167,67 @@ export class RpgHub {
         this.listCharacters();
         this.openSnackBar('Personagem apagado!', 'Fechar');
       },
-      error: (err: any) => {
-        this.dialog.open(Dialog, {
-          width: '800px',
-          data: {
-            title: 'Erro ao apagar personagem!',
-            message: 'Tente novamente, caso o erro persista contacte o desenvolvedor.',
-          },
-        });
-        console.error('Erro ao apagar personagem:', err);
-      },
+      error: (err: any) => this.openAlert('Erro ao apagar personagem!', err),
     });
   }
 
+  /* Funções CRUD campanhas */
+  campaigns: any = [];
+  listCampaigns() {
+    this.campaign.list().subscribe({
+      next: (res: any) => this.campaigns = res,
+      error: (err: any) => this.openAlert('Erro ao listar campanhas!', err),
+    });
+  }
+
+  createCampaign() {
+    const data = {
+      titulo: "A Maldição de Strahd",
+      descricao: "Aventura com elementos de terror",
+      personagem_id: "4b6a5b77-4b6d-4e69-8d75-b9ac9d6c2eb5",
+    }
+
+    this.campaign.create(data).subscribe({
+      next: (res: any) => {
+        this.listCampaigns();
+        this.openSnackBar('Campanha criada!', 'Fechar');
+      },
+      error: (err: any) => this.openAlert('Erro ao criar campanha!', err),
+    });
+  }
+
+  editCampaign(campanha_id: string) {
+    const data = Object.assign({}, this.campaigns.find(
+      (campaign: { campanha_id: string }) => campaign.campanha_id === campanha_id
+    ));
+
+    const result = {
+      campanha_id: data.campanha_id,
+      titulo: 'As Minas Perdidas de Phandelver'
+    };
+
+    this.campaign.update(result).subscribe({
+      next: (res: any) => {
+        this.listCampaigns();
+        this.openSnackBar('Campanha alterada!', 'Fechar');
+      },
+      error: (err: any) => this.openAlert('Erro ao alterar campanha!', err),
+    });
+  }
+
+  deleteCampaign(campanha_id: string) {
+    if (!confirm('Tem certeza que quer apagar essa campanha?')) return;
+
+    this.campaign.delete(campanha_id).subscribe({
+      next: (res: any) => {
+        this.listCampaigns();
+        this.openSnackBar('Campanha apagada!', 'Fechar');
+      },
+      error: (err: any) => this.openAlert('Erro ao apagar campanha!', err),
+    });
+  }
+
+  /* Auth */
   logout() {
     this.auth.logout();
     this.router.navigate(['/login']);

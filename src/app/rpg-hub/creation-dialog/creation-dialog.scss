@@ -25,3 +25,17 @@
   margin-left: auto;
   background-color: rgb(164, 2, 2) !important;
 }
+
+.btn {
+  padding: 0.8rem 1rem;
+  background: #7c5e3b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+}
+.btn:hover {
+  background: #5a4332;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map, catchError, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../enviroment';
 
 @Injectable({ providedIn: 'root' })
@@ -38,11 +38,14 @@ export class CharacterService {
 
   get(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, {
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.token
+      }
     });
   }
 
-  update(data: {personagem_id: string, nome: string, classe: string, raca: string, origens: string[] | string, atr?: object }): Observable<any> {
+  update(data: { personagem_id: string, nome: string, classe: string, raca: string, origens: string[] | string, atr?: object }): Observable<any> {
     data.atr = { STR: 1, AGI: 1, RES: 1, INT: 1, PER: 1, DET: 1 };
     data.origens = data.origens[0] + ' e ' + data.origens[1];
 

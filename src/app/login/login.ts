@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,7 +33,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatTabsModule,
   ],
   templateUrl: './login.html',
