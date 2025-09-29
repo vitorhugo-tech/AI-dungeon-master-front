@@ -19,7 +19,7 @@
       </button>
 
       @if (characters.length){
-        <button (click)="selectedCampaign = {}">
+        <button (click)="selectedCampaign = {}; personagem_id.setValue('')">
           <fa-icon class="icon" [icon]="faPlus" />
           @if (showSidebar){
             <span class="label">Nova Campanha</span>

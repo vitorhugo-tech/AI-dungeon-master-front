@@ -198,18 +198,24 @@ export class RpgHub {
   }
 
   deleteCharacter(personagem_id: string) {
-    if (!confirm('Tem certeza que quer apagar esse personagem?')) return;
+    if (
+      !confirm(
+        'Tem certeza que quer excluir esse personagem?\n\n' +
+        'NOTA: Campanhas associadas a ele também serão excluídas'
+      )
+    ) return;
 
     this.character.delete(personagem_id).subscribe({
       next: (res: any) => {
         this.listCharacters();
+        this.listCampaigns();
         if (this.selectedCharacter.personagem_id == personagem_id) {
           this.personagem_id.setValue('');
           this.selectedCharacter = {};
         }
-        this.openSnackBar('Personagem apagado!', 'Fechar');
+        this.openSnackBar('Personagem excluido!', 'Fechar');
       },
-      error: (err: any) => this.openAlert('Erro ao apagar personagem!', err),
+      error: (err: any) => this.openAlert('Erro ao excluir personagem!', err),
     });
   }
 
@@ -263,7 +269,7 @@ export class RpgHub {
   }
 
   deleteCampaign(campanha_id: string) {
-    if (!confirm('Tem certeza que quer apagar essa campanha?')) return;
+    if (!confirm('Tem certeza que quer excluir essa campanha?')) return;
 
     this.campaign.delete(campanha_id).subscribe({
       next: (res: any) => {
@@ -271,9 +277,9 @@ export class RpgHub {
         if (this.selectedCampaign.campanha_id == campanha_id) {
           this.selectedCampaign = {};
         }
-        this.openSnackBar('Campanha apagada!', 'Fechar');
+        this.openSnackBar('Campanha excluida!', 'Fechar');
       },
-      error: (err: any) => this.openAlert('Erro ao apagar campanha!', err),
+      error: (err: any) => this.openAlert('Erro ao excluir campanha!', err),
     });
   }
 
