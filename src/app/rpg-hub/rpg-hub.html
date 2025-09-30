@@ -1,6 +1,9 @@
-<main class="container">
+<main class="container" [class.blur]="showSidebar">
   <!-- Sidebar -->
-  <aside class="sidebar" [class.collapsed]="!showSidebar">
+  <div class="sidebar-overlay" [class.show]="showSidebar" (click)="toggleSidebar()">
+    <button class="btn"><fa-icon [icon]="faBars" /></button>
+  </div>
+  <aside class="sidebar" [class.collapsed]="!showSidebar" [class.open]="showSidebar">
     <nav>
       <!-- Logo e menu -->
       <button (click)="toggleSidebar()">
@@ -86,7 +89,7 @@
   </aside>
 
   <!-- Main Chat -->
-  <div class="chat-container">
+  <div class="chat-container" [class.dimmed]="showSidebar">
     <div class="chat-messages">
     </div>
     <div class="chat-options" [class.center]="!selectedCampaign.campanha_id">
@@ -110,17 +113,17 @@
         }
       </div>
 
-      <div class="chat-input">
+      <div class="chat-input" [class.mobile]="!selectedCampaign.campanha_id">
         <!-- TODO: Implementar inventário -->
         <!-- <button><fa-icon class="icon" [icon]="faSackXmark" /></button> -->
         @if (!characters.length) {
           <button class="w-full" (click)="createCharacter()">
             <fa-icon class="icon" [icon]="faUserPlus" />
-            Novo personagem
+            Crie seu personagem
           </button>
         } @else if (!selectedCampaign.campanha_id) {
           <mat-form-field class="w-full" >
-            <mat-label>Personagem</mat-label>
+            <mat-label>Selecione um personagem</mat-label>
             <mat-select [formControl]="personagem_id" [errorStateMatcher]="matcher" (selectionChange)="selectCharacter()">
               @for (char of characters; track char.personagem_id) {
                 <mat-option [value]="char.personagem_id">{{ `${char.nome}, ${char.classe} ${char.raca}` }}</mat-option>
@@ -130,7 +133,7 @@
               <mat-error>Selecionar um personagem é <strong>obrigatório</strong></mat-error>
             }
           </mat-form-field>
-          <button class="mb-20" (click)="createCampaign()">
+          <button class="mb-20" (click)="createCampaign()" [class.w-full]="!selectedCampaign.campanha_id">
             <fa-icon class="icon" [icon]="faUserPlus" />
             Iniciar nova campanha
           </button>

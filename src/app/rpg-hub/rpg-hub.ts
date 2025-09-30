@@ -58,6 +58,33 @@ export class RpgHub {
   ) {
     this.listCharacters();
     this.listCampaigns();
+
+    /* const token = localStorage.getItem('access_token') ?? '';
+    const ws = new WebSocket("ws://127.0.0.1:8000/api/v1/ws");
+
+    ws.onopen = () => {
+      console.log("Conectado ao WebSocket");
+      ws.send(JSON.stringify({
+        token,
+        prompt: "Me explique como surgiu o sistema de magia vanciano."
+      }));
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.error) {
+          console.error("Erro do servidor:", data.error);
+        } else {
+          console.log(data.text);
+        }
+      } catch (err) {
+        console.error("Falha ao parsear mensagem:", err, event.data);
+      }
+    };
+
+    ws.onclose = (event) => console.log("WebSocket fechado", event.code, event.reason);
+    ws.onerror = (err) => console.error("Erro no WebSocket:", err); */
   }
 
   /* Seleção de campanha e personagem ativos */
@@ -99,7 +126,8 @@ export class RpgHub {
   faXmark = faXmark;
 
   /* Funções de exibição da sidebar */
-  showSidebar = true;
+
+  showSidebar = window.innerWidth > 768;
   toggleSidebar() {
     this.showSidebar = !this.showSidebar;
     if (!this.showSidebar) {
