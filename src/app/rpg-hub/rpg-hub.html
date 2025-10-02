@@ -22,7 +22,7 @@
       </button>
 
       @if (characters.length){
-        <button (click)="selectedCampaign = {}; personagem_id.setValue('')">
+        <button (click)="selectedCampaign = {}; personagem_id.setValue(''); messages = []">
           <fa-icon class="icon" [icon]="faPlus" />
           @if (showSidebar){
             <span class="label">Nova Campanha</span>
@@ -47,9 +47,11 @@
         </button>
         <div class="accordion-body" [class.open]="showCampaigns">
           @for (campaign of campaigns; track campaign.campanha_id; let i = $index) {
-            <div class="item">
-              <span (click)="selectCampaign(campaign.campanha_id)">{{ campaign.titulo }}</span>
-              <button class="delete" (click)="deleteCampaign(campaign.campanha_id)"><fa-icon [icon]="faXmark" /></button>
+            <div class="item" (click)="selectCampaign(campaign.campanha_id)">
+              <span>{{ campaign.titulo ? campaign.titulo : '...' }}</span>
+              <button class="delete" (click)="deleteCampaign(campaign.campanha_id); $event.stopPropagation()">
+                <fa-icon [icon]="faXmark" />
+              </button>
             </div>
           }
         </div>
@@ -70,9 +72,11 @@
         </button>
         <div class="accordion-body" [class.open]="showCharacters">
           @for (char of characters; track char.personagem_id; let i = $index) {
-            <div class="item">
-              <span (click)="editCharacter(char.personagem_id)">{{ `${char.nome}, ${char.classe} ${char.raca}` }}</span>
-              <button class="delete" (click)="deleteCharacter(char.personagem_id)"><fa-icon [icon]="faXmark" /></button>
+            <div class="item" (click)="editCharacter(char.personagem_id)">
+              <span>{{ `${char.nome}, ${char.classe} ${char.raca}` }}</span>
+              <button class="delete" (click)="deleteCharacter(char.personagem_id); $event.stopPropagation()">
+                <fa-icon [icon]="faXmark" />
+              </button>
             </div>
           }
         </div>
@@ -91,6 +95,9 @@
   <!-- Main Chat -->
   <div class="chat-container" [class.dimmed]="showSidebar">
     <div class="chat-messages">
+      @for (msg of messages; track $index) {
+        <div class="message" [class]="msg.origin"><span [innerHTML]="msg.text ? msg.text : '...'"></span></div>
+      }
     </div>
     <div class="chat-options" [class.center]="!selectedCampaign.campanha_id">
       <div class="char-info">
@@ -138,10 +145,13 @@
             Iniciar nova campanha
           </button>
         } @else {
-          <input type="text" placeholder="Digite sua ação..." />
-          <button><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+          <input type="text" matInput [formControl]="prompt" placeholder="Digite sua ação..." (keydown.enter)="editCampaign()"/>
+          <button (click)="editCampaign()"><fa-icon class="icon" [icon]="faPaperPlane" /></button>
         }
       </div>
+      @if (!prompt.valid && prompt.dirty) {
+        <mat-error class="red">O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+      }
     </div>
   </div>
 </main>

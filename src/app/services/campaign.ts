@@ -19,7 +19,13 @@ export class CampaignService {
     });
   }
 
-  create(data: any): Observable<any> {
+  create(personagem_id: string): Observable<any> {
+    const data = {
+      titulo: "A Maldição de Strahd",
+      descricao: "Aventura com elementos de terror",
+      personagem_id: personagem_id,
+    }
+
     return this.http.post(this.apiUrl, data, {
       headers: {
         'Content-Type': 'application/json',

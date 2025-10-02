@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faBars,
@@ -26,9 +26,12 @@ import { CreationDialog } from './creation-dialog/creation-dialog';
 import { AuthService } from '../services/auth';
 import { CharacterService } from '../services/character';
 import { CampaignService } from '../services/campaign';
+import { WebsocketService } from '../services/websocket';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormControl, Validators, FormsModule, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { Subscription } from 'rxjs';
+import { marked } from 'marked';
 
 export class FieldErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -48,43 +51,25 @@ export class FieldErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './rpg-hub.html',
   styleUrl: './rpg-hub.scss',
 })
-export class RpgHub {
+export class RpgHub implements OnDestroy {
+  messages: { origin: string, text: string }[] = [];
+  private sub!: Subscription;
+
   constructor(
     private dialog: MatDialog,
     private auth: AuthService,
     private character: CharacterService,
     private campaign: CampaignService,
+    private ws: WebsocketService,
     private router: Router
   ) {
     this.listCharacters();
     this.listCampaigns();
+  }
 
-    /* const token = localStorage.getItem('access_token') ?? '';
-    const ws = new WebSocket("ws://127.0.0.1:8000/api/v1/ws");
-
-    ws.onopen = () => {
-      console.log("Conectado ao WebSocket");
-      ws.send(JSON.stringify({
-        token,
-        prompt: "Me explique como surgiu o sistema de magia vanciano."
-      }));
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.error) {
-          console.error("Erro do servidor:", data.error);
-        } else {
-          console.log(data.text);
-        }
-      } catch (err) {
-        console.error("Falha ao parsear mensagem:", err, event.data);
-      }
-    };
-
-    ws.onclose = (event) => console.log("WebSocket fechado", event.code, event.reason);
-    ws.onerror = (err) => console.error("Erro no WebSocket:", err); */
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+    this.ws.disconnect();
   }
 
   /* Seleção de campanha e personagem ativos */
@@ -92,7 +77,6 @@ export class RpgHub {
 
   personagem_id = new FormControl('', Validators.required);
   selectedCharacter: any = {};
-
   selectCharacter(){
     this.selectedCharacter = Object.assign({}, this.characters.find(
       (char: { personagem_id: string }) => char.personagem_id === this.personagem_id.value
@@ -100,11 +84,19 @@ export class RpgHub {
   }
 
   selectedCampaign: any = {};
-
   selectCampaign(campanha_id: string){
     this.selectedCampaign = Object.assign({}, this.campaigns.find(
       (campaign: { campanha_id: string }) => campaign.campanha_id === campanha_id
     ));
+    this.messages = [];
+    for (let i = 1; i < this.selectedCampaign.events.length; i++){
+      const event = this.selectedCampaign.events[i];
+      if ("narracao" in event) {
+        this.messages.push({ origin: 'ai', text: marked.parse(event.narracao) as string });
+      } else if ("acao" in event) {
+        this.messages.push({ origin: 'user', text: marked.parse(event.acao) as string });
+      }
+    }
     this.personagem_id.setValue(this.selectedCampaign.personagem);
     this.selectCharacter();
   }
@@ -126,7 +118,6 @@ export class RpgHub {
   faXmark = faXmark;
 
   /* Funções de exibição da sidebar */
-
   showSidebar = window.innerWidth > 768;
   toggleSidebar() {
     this.showSidebar = !this.showSidebar;
@@ -166,6 +157,15 @@ export class RpgHub {
       data: { title: errorTitle, message: errorMsg },
     });
     console.error(errorTitle, err);
+  }
+
+  isValidJson(str: string) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   /* Funções CRUD personagens */
@@ -249,7 +249,7 @@ export class RpgHub {
 
   /* Funções CRUD campanhas */
   campaigns: any = [];
-  listCampaigns(campanha_id: string = '') {
+  async listCampaigns(campanha_id: string = '') {
     this.campaign.list().subscribe({
       next: (res: any) => {
         this.campaigns = res;
@@ -262,37 +262,64 @@ export class RpgHub {
   }
 
   createCampaign() {
-    const data = {
-      titulo: "A Maldição de Strahd",
-      descricao: "Aventura com elementos de terror",
-      personagem_id: this.personagem_id.value,
-    }
+    let currentMessage = '';
 
-    this.campaign.create(data).subscribe({
-      next: (res: any) => {
-        this.listCampaigns(res.campanha_id);
-        this.openSnackBar('Campanha criada!', 'Fechar');
-      },
-      error: (err: any) => this.openAlert('Erro ao criar campanha!', err),
+    this.ws.createCampanha(this.personagem_id.value as string);
+
+    this.sub = this.ws.messages$.subscribe(async char => {
+      let resposta = char.replace(/```json/, '').replace(/```/, '').trim();
+      if (!this.selectedCampaign.campanha_id) {
+        this.listCampaigns(this.ws.campanha_id);
+      }
+
+      if (this.isValidJson(resposta)){
+        const jsonResposta = JSON.parse(resposta);
+        if ("titulo" in jsonResposta && !("narracao" in jsonResposta)) {
+          let campanha = this.campaigns.find(
+            (campaign: { campanha_id: string }) => campaign.campanha_id === this.selectedCampaign.campanha_id
+          );
+          if (campanha) {
+            campanha.titulo = jsonResposta.titulo;
+          }
+        } else if ("narracao" in jsonResposta) {
+          const parsed = marked.parse(jsonResposta.narracao);
+          currentMessage = parsed instanceof Promise ? await parsed : parsed as string;
+          const index = this.messages.length ? this.messages.length-1 : 0;
+          this.messages[index] = { origin: 'ai', text: currentMessage };
+        }
+      }
     });
   }
 
-  editCampaign(campanha_id: string) {
-    const data = Object.assign({}, this.campaigns.find(
-      (campaign: { campanha_id: string }) => campaign.campanha_id === campanha_id
-    ));
+  prompt = new FormControl('', Validators.required);
+  editCampaign() {
+    this.prompt.markAsDirty();
 
-    const result = {
-      campanha_id: data.campanha_id,
-      titulo: 'As Minas Perdidas de Phandelver'
+    if (!this.prompt.valid || !this.selectedCampaign.campanha_id) {
+      console.log("Campos não preenchidos");
+      return
     };
 
-    this.campaign.update(result).subscribe({
-      next: (res: any) => {
-        this.listCampaigns();
-        this.openSnackBar('Campanha alterada!', 'Fechar');
-      },
-      error: (err: any) => this.openAlert('Erro ao alterar campanha!', err),
+    this.messages.push({ origin: 'user', text: this.prompt.value as string });
+    this.messages.push({ origin: '', text: '' });
+
+    let currentMessage = '';
+
+    this.ws.sendMessageCampanha(this.prompt.value as string, this.selectedCampaign.campanha_id);
+    this.prompt.setValue('');
+    this.prompt.markAsPristine();
+
+    this.sub = this.ws.messages$.subscribe(async char => {
+      let resposta = char.replace(/```json/, '').replace(/```/, '').trim();
+
+      if (this.isValidJson(resposta)){
+        const jsonResposta = JSON.parse(resposta)
+        if ("narracao" in jsonResposta) {
+          const parsed = marked.parse(jsonResposta.narracao);
+          currentMessage = parsed instanceof Promise ? await parsed : parsed as string;
+          this.messages[this.messages.length-1] = { origin: 'ai', text: currentMessage }
+        }
+      }
     });
   }
 
@@ -304,8 +331,10 @@ export class RpgHub {
         this.listCampaigns();
         if (this.selectedCampaign.campanha_id == campanha_id) {
           this.selectedCampaign = {};
+          this.messages = [];
+        } else {
+          this.openSnackBar('Campanha excluida!', 'Fechar');
         }
-        this.openSnackBar('Campanha excluida!', 'Fechar');
       },
       error: (err: any) => this.openAlert('Erro ao excluir campanha!', err),
     });
