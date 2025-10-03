@@ -36,6 +36,7 @@ export class CharacterService {
     });
   }
 
+  /* Esta função não está sendo utilizada atualmente */
   get(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, {
       headers: {

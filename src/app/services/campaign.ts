@@ -19,6 +19,7 @@ export class CampaignService {
     });
   }
 
+  /* Esta função não está sendo utilizada atualmente */
   create(personagem_id: string): Observable<any> {
     const data = {
       titulo: "A Maldição de Strahd",
@@ -34,6 +35,7 @@ export class CampaignService {
     });
   }
 
+  /* Esta função não está sendo utilizada atualmente */
   get(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`, {
       headers: {
@@ -43,6 +45,7 @@ export class CampaignService {
     });
   }
 
+  /* Esta função não está sendo utilizada atualmente */
   update(data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${data.campanha_id}`, data, {
       headers: {

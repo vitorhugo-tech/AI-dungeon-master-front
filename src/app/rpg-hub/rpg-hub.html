@@ -47,7 +47,7 @@
         </button>
         <div class="accordion-body" [class.open]="showCampaigns">
           @for (campaign of campaigns; track campaign.campanha_id; let i = $index) {
-            <div class="item" (click)="selectCampaign(campaign.campanha_id)">
+            <div class="item" (click)="listCampaigns(campaign.campanha_id)">
               <span>{{ campaign.titulo ? campaign.titulo : '...' }}</span>
               <button class="delete" (click)="deleteCampaign(campaign.campanha_id); $event.stopPropagation()">
                 <fa-icon [icon]="faXmark" />
@@ -104,7 +104,9 @@
         @if (personagem_id.value) {
           <span class="info-id">
             {{ selectedCharacter?.nome }}
-          </span>|
+          </span>
+          <!-- TODO: Implementar alteração de stats do jogador -->
+          <!-- |
           <span class="info-hp">
             <fa-icon class="icon" [icon]="faHeart" />
             {{ `${selectedCharacter?.stats.pv}/${selectedCharacter?.stats.pv_max}` }}
@@ -112,7 +114,7 @@
           <span class="info-ep">
             <fa-icon class="icon" [icon]="faBoltLightning" />
             {{ `${selectedCharacter?.stats.pe}/${selectedCharacter?.stats.pe_max}` }}
-          </span>
+          </span> -->
           <!-- TODO: Implementar sistema de níveis -->
           <!-- |
           <span class="info-lvl">Nível {{ selectedCharacter.level }}</span>|

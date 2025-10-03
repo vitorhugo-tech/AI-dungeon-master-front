@@ -140,8 +140,6 @@ export class RpgHub implements OnDestroy {
   }
 
   /* Utilidades */
-  defaultErrorMsg = 'Tente novamente, caso o erro persista contacte o desenvolvedor.';
-
   snackBar = inject(MatSnackBar);
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
@@ -151,12 +149,14 @@ export class RpgHub implements OnDestroy {
     });
   }
 
-  openAlert(errorTitle: string, err: any, errorMsg: string = this.defaultErrorMsg) {
+  alertError(
+    errorTitle: string = 'Ocorreu um erro!',
+    errorMsg: string = 'Recarregue sua página e tente novamente, caso o erro persista contacte o desenvolvedor.'
+  ) {
     this.dialog.open(Dialog, {
       width: '800px',
       data: { title: errorTitle, message: errorMsg },
     });
-    console.error(errorTitle, err);
   }
 
   isValidJson(str: string) {
@@ -173,7 +173,7 @@ export class RpgHub implements OnDestroy {
   listCharacters() {
     this.character.list().subscribe({
       next: (res: any) => this.characters = res,
-      error: (err: any) => this.openAlert('Erro ao listar personagens!', err),
+      error: (err: any) => this.alertError(),
     });
   }
 
@@ -189,7 +189,7 @@ export class RpgHub implements OnDestroy {
             this.listCharacters();
             this.openSnackBar('Personagem criado!', 'Fechar');
           },
-          error: (err: any) => this.openAlert('Erro ao criar personagem!', err),
+          error: (err: any) => this.alertError(),
         });
       }
     });
@@ -219,7 +219,7 @@ export class RpgHub implements OnDestroy {
             this.listCharacters();
             this.openSnackBar('Personagem alterado!', 'Fechar');
           },
-          error: (err: any) => this.openAlert('Erro ao alterar personagem!', err),
+          error: (err: any) => this.alertError(),
         });
       }
     });
@@ -243,7 +243,7 @@ export class RpgHub implements OnDestroy {
         }
         this.openSnackBar('Personagem excluido!', 'Fechar');
       },
-      error: (err: any) => this.openAlert('Erro ao excluir personagem!', err),
+      error: (err: any) => this.alertError(),
     });
   }
 
@@ -257,7 +257,7 @@ export class RpgHub implements OnDestroy {
           this.selectCampaign(campanha_id);
         }
       },
-      error: (err: any) => this.openAlert('Erro ao listar campanhas!', err),
+      error: (err: any) => this.alertError(),
     });
   }
 
@@ -336,7 +336,7 @@ export class RpgHub implements OnDestroy {
           this.openSnackBar('Campanha excluida!', 'Fechar');
         }
       },
-      error: (err: any) => this.openAlert('Erro ao excluir campanha!', err),
+      error: (err: any) => this.alertError(),
     });
   }
 
