@@ -285,7 +285,9 @@ export class RpgHub implements OnDestroy {
           const parsed = marked.parse(jsonResposta.narracao);
           currentMessage = parsed instanceof Promise ? await parsed : parsed as string;
           const index = this.messages.length ? this.messages.length-1 : 0;
-          this.messages[index] = { origin: 'ai', text: currentMessage };
+          if (currentMessage){
+            this.messages[index] = { origin: 'ai', text: currentMessage };
+          }
         }
       }
     });
@@ -317,7 +319,9 @@ export class RpgHub implements OnDestroy {
         if ("narracao" in jsonResposta) {
           const parsed = marked.parse(jsonResposta.narracao);
           currentMessage = parsed instanceof Promise ? await parsed : parsed as string;
-          this.messages[this.messages.length-1] = { origin: 'ai', text: currentMessage }
+          if (currentMessage) {
+            this.messages[this.messages.length-1] = { origin: 'ai', text: currentMessage }
+          }
         }
       }
     });
