@@ -1,59 +1,74 @@
-# AiRpg
+# AI-RPG (Front-end)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.1.
+Este repositório contém o front-end do projeto AI-RPG — um assistente / Mestre de Masmorras alimentado por LLMs. Ele foi desenvolvido em Angular (TypeScript) e foi pensado para ser usado em conjunto com o back-end do projeto: https://github.com/vitorhugo-dev-1/AI-dungeon-master-back
 
-## Development server
+## Visão geral
 
-To start a local development server, run:
+Funcionalidades principais:
 
-```bash
+- Cadastro e login de usuários
+- Criação automática de personagens, histórias e campanhas
+- Fluxos adaptativos com base nas escolhas do jogador
+- Comunicação em tempo real via WebSocket (integração com backend)
+
+## Requisitos
+
+- Node.js (recomendado 14.x ou superior)
+- npm (vem com Node.js)
+- Backend do projeto em execução para autenticação e WebSocket (veja link acima)
+
+## Instalação
+
+1. Clone o repositório:
+
+```powershell
+git clone https://github.com/vitorhugo-dev-1/AI-dungeon-master-front.git .
+```
+
+2. Instale as dependências:
+
+```powershell
+npm install
+```
+
+## Como rodar (desenvolvimento)
+
+No PowerShell, inicie a aplicação:
+
+```powershell
+npm start
+```
+
+Ou use o CLI do Angular:
+
+```powershell
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Caso não tenha ele instalado:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```powershell
+npm install -g @angular/cli
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Por padrão o servidor de desenvolvimento do Angular (`ng serve`) costuma expor a aplicação em `http://localhost:4200`. Verifique a saída do terminal caso a porta seja diferente.
 
-```bash
-ng generate --help
-```
 
-## Building
+## Estrutura do projeto (resumo)
 
-To build the project run:
+Principais arquivos e diretórios:
 
-```bash
-ng build
-```
+- `src/` — código-fonte do front-end
+  - `app/` — componentes, rotas e serviços do app
+    - `app.ts`, `app.routes.ts`, `app.config.ts` — bootstrap e configuração
+    - `auth-guard.ts` — guarda de rotas autenticadas
+    - `login/` — UI de autenticação e assets (imagens, fontes)
+    - `rpg-hub/` — tela principal do jogo) e `creation-dialog/` para criação de personagens
+    - `dialog/` — componentes modais reutilizáveis
+    - `services/` — serviços: `auth.ts`, `campaign.ts`, `character.ts`, `websocket.ts`
+- `src/environment.ts` — arquivo de configuração de ambiente
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
+## Configuração do backend e WebSocket
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Este front espera endpoints HTTP para autenticação e recursos (campanhas, personagens) e um servidor WebSocket para comunicação em tempo real. Ajuste os endpoints no arquivo `src/enviroment.ts` para apontar para seu backend.
