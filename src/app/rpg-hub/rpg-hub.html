@@ -1,4 +1,4 @@
-<main class="container" [class.blur]="showSidebar">
+<main class="main-container">
   <!-- Sidebar -->
   <div class="sidebar-overlay" [class.show]="showSidebar" (click)="toggleSidebar()">
     <button class="btn"><fa-icon [icon]="faBars" /></button>
@@ -30,7 +30,7 @@
         </button>
       }
       @if (campaigns.length || characters.length){
-        <hr class="bar">
+        <hr class="w-[80%] border-[#c9a66b] my-1 mx-auto">
       }
       <!-- Campanhas -->
       @if (campaigns.length){
@@ -104,34 +104,30 @@
         @if (personagem_id.value) {
           <span class="info-id">
             {{ selectedCharacter?.nome }}
-          </span>
+          </span>|
           <!-- TODO: Implementar alteração de stats do jogador -->
-          <!-- |
-          <span class="info-hp">
+          <span id="info-hp" class="text-red-500">
             <fa-icon class="icon" [icon]="faHeart" />
             {{ `${selectedCharacter?.stats.pv}/${selectedCharacter?.stats.pv_max}` }}
           </span>|
-          <span class="info-ep">
+          <span id="info-ep" class="text-blue-700">
             <fa-icon class="icon" [icon]="faBoltLightning" />
             {{ `${selectedCharacter?.stats.pe}/${selectedCharacter?.stats.pe_max}` }}
-          </span> -->
+          </span>|
           <!-- TODO: Implementar sistema de níveis -->
-          <!-- |
-          <span class="info-lvl">Nível {{ selectedCharacter.level }}</span>|
-          <span class="info-xp">XP: {{ `${selectedCharacter.xp}/${selectedCharacter.level + 2}` }}</span> -->
+          <span id="info-lvl" class="text-black">Nível {{ selectedCharacter.level }}</span>|
+          <span id="info-xp" class="text-gray-500">XP: {{ `${selectedCharacter.xp}/${selectedCharacter.level + 2}` }}</span>
         }
       </div>
 
       <div class="chat-input" [class.mobile]="!selectedCampaign.campanha_id">
-        <!-- TODO: Implementar inventário -->
-        <!-- <button><fa-icon class="icon" [icon]="faSackXmark" /></button> -->
         @if (!characters.length) {
-          <button class="w-full" (click)="createCharacter()">
+          <button class=" btn w-full whitespace-nowrap" (click)="createCharacter()">
             <fa-icon class="icon" [icon]="faUserPlus" />
             Crie seu personagem
           </button>
         } @else if (!selectedCampaign.campanha_id) {
-          <mat-form-field class="w-full" >
+          <mat-form-field class="w-full whitespace-nowrap" >
             <mat-label>Selecione um personagem</mat-label>
             <mat-select [formControl]="personagem_id" [errorStateMatcher]="matcher" (selectionChange)="selectCharacter()">
               @for (char of characters; track char.personagem_id) {
@@ -142,17 +138,19 @@
               <mat-error>Selecionar um personagem é <strong>obrigatório</strong></mat-error>
             }
           </mat-form-field>
-          <button class="mb-20" (click)="createCampaign()" [class.w-full]="!selectedCampaign.campanha_id">
+          <button class="btn mb-[20px]" (click)="createCampaign()" [class.w-full.whitespace-nowrap]="!selectedCampaign.campanha_id">
             <fa-icon class="icon" [icon]="faUserPlus" />
             Iniciar nova campanha
           </button>
         } @else {
+          <!-- TODO: Implementar inventário -->
+          <button class="btn"><fa-icon class="icon" [icon]="faSackXmark" /></button>
           <input type="text" matInput [formControl]="prompt" placeholder="Digite sua ação..." (keydown.enter)="editCampaign()"/>
-          <button (click)="editCampaign()"><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+          <button class="btn" (click)="editCampaign()"><fa-icon class="icon" [icon]="faPaperPlane" /></button>
         }
       </div>
       @if (!prompt.valid && prompt.dirty) {
-        <mat-error class="red">O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
+        <mat-error class="text-red-500">O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
       }
     </div>
   </div>

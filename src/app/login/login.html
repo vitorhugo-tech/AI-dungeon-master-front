@@ -1,4 +1,4 @@
-<main class="container">
+<main>
   <section class="info-panel slideshow">
     <div class="slide"></div>
     <div class="slide"></div>
@@ -12,7 +12,7 @@
     <article class="login-card">
       <div class="textbox">
         <h1><b>D</b>ungeon<b>M</b>ind</h1>
-        <h2>Um sistema para jogar RPG utilizando IA</h2>
+        <h2><b>Um sistema para jogar RPG utilizando IA</b></h2>
       </div>
       <mat-tab-group [(selectedIndex)]="selectedTabIndex" dynamicHeight>
         <!-- Entrar -->
@@ -55,8 +55,8 @@
           <div class="links">
             <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a>
             <!-- TODO: Implementar reset de senha -->
-            <!--  |
-            <a title="Esqueceu a senha?" (click)="goToTab(2)">Esqueceu a senha?</a> -->
+            |
+            <a title="Esqueceu a senha?" (click)="goToTab(2)">Esqueceu a senha?</a>
           </div>
         </mat-tab>
         <!-- Criar -->
@@ -118,7 +118,7 @@
         </mat-tab>
         <!-- TODO: Implementar reset de senha -->
         <!-- Recuperar -->
-<!--         <mat-tab>
+        <mat-tab>
           <h2>Recupere sua senha</h2>
           <form [formGroup]="recoverForm" (ngSubmit)="onSubmit(this.recoverForm.value)">
             <mat-form-field>
@@ -143,9 +143,9 @@
             <a title="Entre com uma conta existente" (click)="goToTab(0)">Entre com uma conta existente</a> |
             <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a>
           </div>
-        </mat-tab> -->
+        </mat-tab>
         <!-- Confirmação -->
-        <!-- <mat-tab>
+        <mat-tab>
           <h2>Insira o código enviado ao seu e-mail</h2>
           <form [formGroup]="confirmationForm" (ngSubmit)="onSubmit(this.confirmationForm.value)">
             <mat-form-field>
@@ -166,9 +166,9 @@
           <div class="links">
             <a title="Retornar" (click)="goToTab(3)">Retornar</a>
           </div>
-        </mat-tab> -->
+        </mat-tab>
         <!-- Redefinição -->
-        <!-- <mat-tab>
+        <mat-tab>
           <h2>Redefina sua senha</h2>
           <form [formGroup]="passwordResetForm" (ngSubmit)="onSubmit(this.passwordResetForm.value)">
             <mat-form-field>
@@ -200,7 +200,7 @@
           <div class="links">
             <a title="Retornar" (click)="goToTab(4)">Retornar</a>
           </div>
-        </mat-tab> -->
+        </mat-tab>
       </mat-tab-group>
     </article>
   </section>

@@ -1,11 +1,11 @@
-<h2 mat-dialog-title class="flex">
+<h2 mat-dialog-title class="flex! items-center!">
   <b>Criação de Personagem</b>
-  <button class="last" matButton="filled" mat-dialog-close><fa-icon [icon]="faXmark" /></button>
+  <button class="last ml-auto" matButton="filled" mat-dialog-close><fa-icon [icon]="faXmark" /></button>
 </h2>
 
 <mat-dialog-content>
-  <div class="char-panel">
-    <form [formGroup]="characterForm" (ngSubmit)="sendData()">
+  <div class="py-0 px-[2rem]">
+    <form class="flex flex-col" [formGroup]="characterForm" (ngSubmit)="sendData()">
       <mat-form-field>
         <mat-label>Nome</mat-label>
         <input
