@@ -10,12 +10,12 @@
         @if (showSidebar){
           <span class="label"><b>D</b>ungeon<b>M</b>ind</span>
         }
-        <fa-icon class="icon" [icon]="faBars" />
+        <fa-icon [icon]="faBars" />
       </button>
 
       <!-- Criar registros -->
       <button (click)="createCharacter()">
-        <fa-icon class="icon" [icon]="faUserPlus" />
+        <fa-icon [icon]="faUserPlus" />
         @if (showSidebar){
           <span class="label">Novo Personagem</span>
         }
@@ -23,7 +23,7 @@
 
       @if (characters.length){
         <button (click)="selectedCampaign = {}; personagem_id.setValue(''); messages = []">
-          <fa-icon class="icon" [icon]="faPlus" />
+          <fa-icon [icon]="faPlus" />
           @if (showSidebar){
             <span class="label">Nova Campanha</span>
           }
@@ -35,7 +35,7 @@
       <!-- Campanhas -->
       @if (campaigns.length){
         <button (click)="toggleCampaigns()">
-          <fa-icon class="icon" [icon]="faBook" />
+          <fa-icon [icon]="faBook" />
           @if (showSidebar){
             <span class="label">Campanhas</span>
             @if (!showCampaigns){
@@ -60,7 +60,7 @@
       <!-- Personagens -->
       @if (characters.length){
         <button (click)="toggleCharacters()">
-          <fa-icon class="icon" [icon]="faPeopleGroup" />
+          <fa-icon [icon]="faPeopleGroup" />
           @if (showSidebar){
             <span class="label">Personagens</span>
             @if (!showCharacters){
@@ -83,8 +83,8 @@
       }
 
       <!-- Sair -->
-      <button class="bottom" (click)="logout()">
-        <fa-icon class="icon" [icon]="faArrowRightFromBracket" />
+      <button class="mt-auto" (click)="logout()">
+        <fa-icon [icon]="faArrowRightFromBracket" />
         @if (showSidebar){
           <span class="label">Sair</span>
         }
@@ -107,11 +107,11 @@
           </span>|
           <!-- TODO: Implementar alteração de stats do jogador -->
           <span id="info-hp" class="text-red-500">
-            <fa-icon class="icon" [icon]="faHeart" />
+            <fa-icon [icon]="faHeart" />
             {{ `${selectedCharacter?.stats.pv}/${selectedCharacter?.stats.pv_max}` }}
           </span>|
           <span id="info-ep" class="text-blue-700">
-            <fa-icon class="icon" [icon]="faBoltLightning" />
+            <fa-icon [icon]="faBoltLightning" />
             {{ `${selectedCharacter?.stats.pe}/${selectedCharacter?.stats.pe_max}` }}
           </span>|
           <!-- TODO: Implementar sistema de níveis -->
@@ -123,7 +123,7 @@
       <div class="chat-input" [class.mobile]="!selectedCampaign.campanha_id">
         @if (!characters.length) {
           <button class=" btn w-full whitespace-nowrap" (click)="createCharacter()">
-            <fa-icon class="icon" [icon]="faUserPlus" />
+            <fa-icon [icon]="faUserPlus" />
             Crie seu personagem
           </button>
         } @else if (!selectedCampaign.campanha_id) {
@@ -138,15 +138,14 @@
               <mat-error>Selecionar um personagem é <strong>obrigatório</strong></mat-error>
             }
           </mat-form-field>
-          <button class="btn mb-[20px]" (click)="createCampaign()" [class.w-full.whitespace-nowrap]="!selectedCampaign.campanha_id">
-            <fa-icon class="icon" [icon]="faUserPlus" />
-            Iniciar nova campanha
+          <button class="btn mb-[20px] ml-2" (click)="createCampaign()" [class.w-full.whitespace-nowrap]="!selectedCampaign.campanha_id">
+            <fa-icon [icon]="faUserPlus" /> Iniciar nova campanha
           </button>
         } @else {
           <!-- TODO: Implementar inventário -->
-          <button class="btn"><fa-icon class="icon" [icon]="faSackXmark" /></button>
+          <button class="btn mr-2"><fa-icon [icon]="faSackXmark" /></button>
           <input type="text" matInput [formControl]="prompt" placeholder="Digite sua ação..." (keydown.enter)="editCampaign()"/>
-          <button class="btn" (click)="editCampaign()"><fa-icon class="icon" [icon]="faPaperPlane" /></button>
+          <button class="btn ml-2" (click)="editCampaign()"><fa-icon [icon]="faPaperPlane" /></button>
         }
       </div>
       @if (!prompt.valid && prompt.dirty) {

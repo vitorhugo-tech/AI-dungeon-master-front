@@ -39,6 +39,11 @@ body {
 
 html, body { height: 100%; }
 
+@font-face {
+  font-family: MorrisRoman;
+  src: url(./app/login/assets/MorrisRomanBlack.otf);
+}
+
 /* Remove estilos padrão de botões */
 button {
   background: none;
