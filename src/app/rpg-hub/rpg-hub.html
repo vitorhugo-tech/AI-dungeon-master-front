@@ -1,4 +1,4 @@
-<main class="main-container">
+<main>
   <!-- Sidebar -->
   <div class="sidebar-overlay" [class.show]="showSidebar" (click)="toggleSidebar()">
     <button class="btn"><fa-icon [icon]="faBars" /></button>
@@ -8,7 +8,7 @@
       <!-- Logo e menu -->
       <button (click)="toggleSidebar()">
         @if (showSidebar){
-          <span class="label"><b>D</b>ungeon<b>M</b>ind</span>
+          <span class="title label"><b>D</b>ungeon<b>M</b>ind</span>
         }
         <fa-icon [icon]="faBars" />
       </button>
@@ -50,7 +50,7 @@
             <div class="item" (click)="listCampaigns(campaign.campanha_id)">
               <span>{{ campaign.titulo ? campaign.titulo : '...' }}</span>
               <button class="delete" (click)="deleteCampaign(campaign.campanha_id); $event.stopPropagation()">
-                <fa-icon [icon]="faXmark" />
+                <fa-icon class="close" [icon]="faXmark" />
               </button>
             </div>
           }
@@ -75,7 +75,7 @@
             <div class="item" (click)="editCharacter(char.personagem_id)">
               <span>{{ `${char.nome}, ${char.classe} ${char.raca}` }}</span>
               <button class="delete" (click)="deleteCharacter(char.personagem_id); $event.stopPropagation()">
-                <fa-icon [icon]="faXmark" />
+                <fa-icon class="close" [icon]="faXmark" />
               </button>
             </div>
           }

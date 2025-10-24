@@ -44,6 +44,24 @@ html, body { height: 100%; }
   src: url(./app/login/assets/MorrisRomanBlack.otf);
 }
 
+/* Variables */
+$title-primary: red;
+$title-secondary: #ffae00;
+
+.title {
+  font-family: MorrisRoman;
+  color: $title-secondary;
+
+  & b {
+    color: $title-primary;
+    text-shadow:
+      -2px -1px 0 $title-secondary,
+       1px -1px 0 $title-secondary,
+      -1px  1px 0 $title-secondary,
+       1px  1px 0 $title-secondary;
+  }
+}
+
 /* Remove estilos padrão de botões */
 button {
   background: none;

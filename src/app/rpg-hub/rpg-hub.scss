@@ -7,8 +7,7 @@
   border-radius: 10px;
 }
 
-/* Sidebar */
-.main-container {
+main {
   margin: 0;
   color: #2c2a1e;
   position: relative;
@@ -19,24 +18,26 @@
   overflow: hidden;
 }
 
+/* Sidebar */
 .sidebar {
-  width: 220px;
-  height: 100vh;
-  background: linear-gradient(180deg, #4b3523, #2a1c13);
-  color: #f5e6c8;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 200px;
+  height: 100vh;
+  background: linear-gradient(180deg, #4b3523, #2a1c13);
+  color: #f5e6c8;
   transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   border-right: 5px ridge #c9a66b;
   box-shadow: inset -4px 0 10px rgba(0, 0, 0, 0.7);
   z-index: 20;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
+  font-size: 0.8rem;
 
   &::-webkit-scrollbar-thumb { background: #c9a66b; }
 
-  & fa-icon {
+  & fa-icon:not(.close, .last) {
     place-self: center;
     margin-right: 1rem;
     font-size: 1rem;
@@ -70,20 +71,9 @@ nav {
       justify-content: space-between;
 
       & fa-icon { margin-right: 0; }
-      & .label {
-        font-family: MorrisRoman;
-        color: #ffae00;
+      & .title {
         padding-left: 10px;
-        font-size: 1.2rem;
-
-        & b {
-          text-shadow:
-            -2px -1px 0 #ffae00,
-             1px -1px 0 #ffae00,
-            -1px  1px 0 #ffae00,
-             1px  1px 0 #ffae00;
-          color: red;
-        }
+        font-size: 1rem;
       }
     }
   }
@@ -91,13 +81,11 @@ nav {
 
 .last {
   place-self: center;
-  font-size: 1rem;
   margin-left: auto;
 }
 
 .sidebar-overlay {
   display: none;
-  font-size: 1rem;
   margin: 0.5rem;
 }
 
@@ -109,7 +97,7 @@ nav {
   background: radial-gradient(circle at center, #ece7d5, #e9d8b5);
   transition: margin-left 0.3s ease;
   align-items: center;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .chat-messages {
@@ -172,7 +160,6 @@ nav {
 .char-info {
   display: flex;
   justify-content: space-around;
-  font-size: 1rem;
   padding: 0.5rem 1rem 0.5rem 1rem;
   font-weight: bold;
   color: #7c5e3b;
@@ -193,7 +180,6 @@ nav {
     border-radius: 6px;
     background: #fffef8;
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.15);
-    font-size: 1rem;
     min-width: 50px;
 
     &:focus { outline: 2px solid #5a4332; }
@@ -225,7 +211,7 @@ nav {
   &:hover {
     background: #444;
 
-    & .delete { visibility: visible; }
+    & .delete { display: block; }
   }
 
   & span {
@@ -235,16 +221,15 @@ nav {
 }
 
 .delete {
-  visibility: hidden;
-  padding: 0.1rem !important;
+  display: none;
   margin-left: auto;
-  font-size: 1rem;
   color: red;
+  padding: 0 0.1rem;
+  border-radius: 25px;
 
   &:hover {
     color: white;
     background-color: red;
-    border-radius: 25px;
   }
 }
 
@@ -288,6 +273,6 @@ nav {
   }
 
   .delete {
-    visibility: visible;
+    display: block;
   }
 }
