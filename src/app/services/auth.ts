@@ -26,6 +26,24 @@ export class AuthService {
     });
   }
 
+  recover(data: { email: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/request-reset`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  confirmRecover(data: { email: string, token_or_code: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/confirma-reset`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  reset(data: { email: string, token_or_code: string, password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/reset-senha`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   saveTokens(data: { access_token: string, refresh_token: string }) {
     localStorage.setItem('access_token', data.access_token);
     localStorage.setItem('refresh_token', data.refresh_token);

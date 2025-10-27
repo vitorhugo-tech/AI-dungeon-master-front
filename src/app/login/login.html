@@ -15,6 +15,7 @@
         <h2><b>Um sistema para jogar RPG utilizando IA</b></h2>
       </div>
       <mat-tab-group [(selectedIndex)]="selectedTabIndex" dynamicHeight>
+
         <!-- Entrar -->
         <mat-tab>
           <h2 class="mt-2">Entre em sua conta</h2>
@@ -53,12 +54,11 @@
             }
           </form>
           <div class="links">
-            <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a>
-            <!-- TODO: Implementar reset de senha -->
-            |
+            <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a> |
             <a title="Esqueceu a senha?" (click)="goToTab(2)">Esqueceu a senha?</a>
           </div>
         </mat-tab>
+
         <!-- Criar -->
         <mat-tab>
           <h2>Crie sua conta</h2>
@@ -109,18 +109,18 @@
             </mat-form-field>
             <button type="submit" class="btn">Criar</button>
             @if (this.signupError != ''){
-              <mat-error class="text-center">Não foi possível criar sua conta. Certifique-se de que o e-mail informado é valido</mat-error>
+              <mat-error class="text-center">{{ signupError }}</mat-error>
             }
           </form>
           <div class="links">
             <a title="Entre com uma conta existente" (click)="goToTab(0)">Entre com uma conta existente</a>
           </div>
         </mat-tab>
-        <!-- TODO: Implementar reset de senha -->
+
         <!-- Recuperar -->
         <mat-tab>
           <h2>Recupere sua senha</h2>
-          <form [formGroup]="recoverForm" (ngSubmit)="onSubmit(this.recoverForm.value)">
+          <form [formGroup]="recoverForm" (ngSubmit)="recover()">
             <mat-form-field>
               <mat-label>E-mail da conta</mat-label>
               <input
@@ -137,17 +137,18 @@
                 <mat-error>Insira um endereço de e-mail válido</mat-error>
               }
             </mat-form-field>
-            <button type="submit" matButton="filled">Recuperar senha</button>
+            <button class="btn" type="submit" matButton="filled">Recuperar senha</button>
           </form>
           <div class="links">
             <a title="Entre com uma conta existente" (click)="goToTab(0)">Entre com uma conta existente</a> |
             <a title="Crie uma conta" (click)="goToTab(1)">Crie uma conta</a>
           </div>
         </mat-tab>
+
         <!-- Confirmação -->
         <mat-tab>
-          <h2>Insira o código enviado ao seu e-mail</h2>
-          <form [formGroup]="confirmationForm" (ngSubmit)="onSubmit(this.confirmationForm.value)">
+          <h2>Caso a conta exista, lhe enviaremos um código. Insira-o para continuar</h2>
+          <form [formGroup]="confirmationForm" (ngSubmit)="confirmRecover()">
             <mat-form-field>
               <mat-label>Código</mat-label>
               <input
@@ -156,21 +157,23 @@
                 formControlName="code"
                 [errorStateMatcher]="matcher"
                 placeholder="Ex. 123456"
+                maxlength="6"
               />
               @if (recoverForm.get('code')?.hasError('required')) {
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
-            <button type="submit" matButton="filled">Confirmar</button>
+            <button class="btn" type="submit" matButton="filled">Confirmar</button>
           </form>
           <div class="links">
-            <a title="Retornar" (click)="goToTab(3)">Retornar</a>
+            <a title="Retornar" (click)="goToTab(2)">Retornar</a>
           </div>
         </mat-tab>
+
         <!-- Redefinição -->
         <mat-tab>
           <h2>Redefina sua senha</h2>
-          <form [formGroup]="passwordResetForm" (ngSubmit)="onSubmit(this.passwordResetForm.value)">
+          <form [formGroup]="passwordResetForm" (ngSubmit)="reset()">
             <mat-form-field>
               <mat-label>Nova senha</mat-label>
               <input
@@ -195,10 +198,13 @@
                 <mat-error>O preenchimento deste campo é <strong>obrigatório</strong></mat-error>
               }
             </mat-form-field>
-            <button type="submit" matButton="filled">Confirmar redefinição</button>
+            <button class="btn" type="submit" matButton="filled">Confirmar redefinição</button>
+            @if (this.resetError != ''){
+              <mat-error class="text-center">{{ resetError }}</mat-error>
+            }
           </form>
           <div class="links">
-            <a title="Retornar" (click)="goToTab(4)">Retornar</a>
+            <a title="Retornar" (click)="goToTab(3)">Retornar</a>
           </div>
         </mat-tab>
       </mat-tab-group>
